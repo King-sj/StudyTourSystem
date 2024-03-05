@@ -8,4 +8,3 @@
 
 [Doc](./doc/README.md)
 
-LYX

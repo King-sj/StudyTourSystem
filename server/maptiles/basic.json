@@ -1,0 +1,34 @@
+{
+  "version": 8,
+  "glyphs": "fontstack/{fontstack}/{range}.pbf",
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "http://localhost:8080/data/v3.json"
+    },
+    "osm": {
+      "type": "raster",
+      "tiles": [
+        "http://localhost:8080/tiles/{z}/{x}/{y}.png"
+      ]
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "source": "osm",
+      "type": "raster"
+    }
+  ],
+  "sprites": [
+    "icons/sprite.png"
+  ],
+  "tilejson": "2.3.0",
+  "map": {
+    "center": [
+      0,
+      0
+    ],
+    "zoom": 2
+  }
+}

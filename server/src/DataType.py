@@ -97,4 +97,5 @@ class journal:
         self.__journalComment = comment
         self.__journalDate = date
 
-    
+    def getJournalName(self):
+        return self.__journalName

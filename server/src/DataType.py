@@ -40,7 +40,7 @@ class Building:
         self.__buildingName = str(name)
     def setBuildingLocation(self,location):
         self.__buildingLocation = tuple(location)
-    
+
 '''
 ## @brief 评论类
 ## @param commentOwner 评论者
@@ -99,3 +99,21 @@ class journal:
 
     def getJournalName(self):
         return self.__journalName
+    def getJournalGrade(self):
+        return self.__journalGrade
+    def getJournalContent(self):
+        return self.__journalContent
+    def getJournalComment(self):
+        return self.__journalComment
+    def getJournalDate(self):
+        return self.__journalDate
+    def setJournalName(self,name):
+        self.__journalName = str(name)
+    def setJournalGrade(self,grade):
+        self.__journalGrade = grade
+    def setJournalContent(self,content):
+        self.__journalContent = list(content)
+    def setJournalComment(self,comment):
+        self.__journalComment = set(comment)
+    def setJournalDate(self,date):
+        self.__journalDate= tuple(date)

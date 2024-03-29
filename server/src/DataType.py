@@ -18,9 +18,9 @@ Text = List[str]
 ## @param buildingFunction 功能
 '''
 class Building:
-    __buildingLocation:Location = tuple()
-    __buildingName:Name = ""
-    __buildingFunction:Function = set()
+    buildingLocation:Location = tuple()
+    buildingName:Name = ""
+    buildingFunction:Function = set()
     '''
     ## @brief 初始化函数和修改以及获取成员变量的函数
     '''
@@ -48,10 +48,10 @@ class Building:
 ## @param commentScore 评论分数
 '''
 class Comment:
-    __commentOwner:Name = ""
-    __commentText:Text = list()
-    __commentScore:int = 0
-    __commentTime:Tuple = time.localtime(time.time())
+    commentOwner:Name = ""
+    commentText:Text = list()
+    commentScore:int = 0
+    commentTime:Tuple = time.localtime(time.time())
 
     def __init__(self,owner,text,score,time):
         self.__commentOwner = owner
@@ -84,11 +84,11 @@ class Comment:
 ## @param journalDate 日记日期
 '''
 class journal:
-    __journalName:Name = ""
-    __journalGrade:float = 0
-    __journalContent:Text = list()
-    __journalComment:Set[Comment]
-    __journalDate:Tuple = time.localtime(time.time())
+    journalName:Name = ""
+    journalGrade:float = 0
+    journalContent:Text = list()
+    journalComment:Set[Comment]
+    journalDate:Tuple = time.localtime(time.time())
 
     def __init__(self,name,grade,content,comment,date):
         self.__journalName = name

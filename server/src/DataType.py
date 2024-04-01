@@ -5,11 +5,13 @@ import time
 ## @type Name 名称
 ## @type Function 功能
 ## @type Text 文本
+## @type Road 道路
 '''
 Location = Tuple[float,float]
 Function = Set[str]
 Name = str
 Text = List[str]
+Road = Tuple[str,str,float,float]
 
 '''
 ## @brief 建筑类
@@ -68,3 +70,6 @@ class journal:
         self.__journalContent = content
         self.__journalComment = comment
         self.__journalDate = date
+
+class area:
+    buildingGroup:Set[Building] = set()

@@ -71,5 +71,6 @@ class journal:
         self.__journalComment = comment
         self.__journalDate = date
 
+#TODO: finish this
 class area:
     buildingGroup:Set[Building] = set()

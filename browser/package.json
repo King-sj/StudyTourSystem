@@ -21,6 +21,8 @@
     "leaflet": "^1.9.4",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
+    "vue-baidu-map-3x": "^1.0.37",
+    "vue-baidu-map-offline": "^1.0.7",
     "vue-echarts": "^6.6.9",
     "vue-router": "^4.2.5"
   },

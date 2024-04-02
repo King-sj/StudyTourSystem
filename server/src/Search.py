@@ -4,25 +4,20 @@ from DataType import *
 def KMPSearch(pat, txt):
     M = len(pat)
     N = len(txt)
- 
     # 创建lps[]将会为模式持有最长的前缀后缀值
     lps = [0]*M
     j = 0 # pat[]的索引
- 
     # 预处理模式（计算lps[]数组）
     computeLPSArray(pat, M, lps)
- 
     i = 0 # txt[]的索引
     results = []
     while i < N:
         if pat[j] == txt[i]:
             i += 1
             j += 1
- 
         if j == M:
             results.append(i-j)
             j = lps[j-1]
- 
         # j个匹配后的不匹配
         elif i < N and pat[j] != txt[i]:
             # 不匹配lps[0..lps[j-1]]字符,
@@ -32,13 +27,11 @@ def KMPSearch(pat, txt):
             else:
                 i += 1
     return results
- 
+
 def computeLPSArray(pat, M, lps):
     len = 0 # 前一个最长前缀后缀的长度
- 
     lps[0] = 0 # lps[0]始终为0
     i = 1
- 
     while i < M:
         if pat[i] == pat[len]:
             len += 1

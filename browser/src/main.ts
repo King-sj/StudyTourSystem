@@ -5,11 +5,20 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import "./permission"
 
 import 'leaflet/dist/leaflet.css';
 
+import naive from 'naive-ui'
+
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
 // import BaiduMapOffline from 'vue-baidu-map-offline';
 import BaiduMap from 'vue-baidu-map-3x';
+
+
+import './styles/index.scss'
 
 const app = createApp(App)
 
@@ -26,4 +35,6 @@ app.use(BaiduMap, {
   // type: 'WebGL' // ||API 默认API  (使用此模式 BMap=BMapGL)
 });
 
+app.use(naive)
+app.use(ElementPlus)
 app.mount('#app')

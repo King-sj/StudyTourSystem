@@ -10,6 +10,5 @@ export const useApiStore = defineStore('apiStore', () => {
     timeout: 1000,
     headers: { 'X-Custom-Header': 'foobar' }
   })
-
   return {}
 })

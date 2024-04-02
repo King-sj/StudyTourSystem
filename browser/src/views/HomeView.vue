@@ -10,5 +10,4 @@ import MapChart from '@/components/MapChart.vue';
 </template>
 
 <style lang="scss" scoped>
-
 </style>

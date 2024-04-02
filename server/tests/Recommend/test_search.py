@@ -1,4 +1,8 @@
-from Search import *
+import sys
+sys.path.append("server")
+from src.Recommend import *
+from src.Search import *
+from src.DataType import *
 
 # 测试用例设置
 comment1 = Comment("Alice", ["Great place"], 5, time.localtime(time.time()))

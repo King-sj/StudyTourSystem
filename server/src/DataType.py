@@ -1,10 +1,10 @@
 from typing import Tuple,Set,List,Dict
 import time
 '''
-## @type Location 位置
-## @type Name 名称
-## @type Function 功能
-## @type Text 文本
+@type Location 位置
+@type Name 名称
+@type Function 功能
+@type Text 文本
 '''
 Location = Tuple[float,float]
 Function = Set[str]
@@ -12,28 +12,32 @@ Name = str
 Text = List[str]
 
 '''
-## @brief 建筑类
-## @param building_location 位置
-## @param building_name 名称
-## @param building_function 功能
+@brief 建筑类
+@param building_location 位置
+@param building_name 名称
+@param building_function 功能
 '''
 class Building:
     building_location:Location = tuple()
     building_name:Name = ""
     building_function:Function = set()
-    '''
-    ## @brief 初始化函数和修改以及获取成员变量的函数
-    '''
     def __init__(self,location,function,name):
         self.building_location = location
         self.building_name = name
         self.building_function = function
+    def __eq__(self, other):
+        if isinstance(other, Building):
+            return self.building_location == other.building_location and \
+                    self.building_name == other.building_name and \
+                    self.building_function == other.building_function
+        return False
+    
 
 '''
-## @brief 评论类
-## @param comment_owner 评论者
-## @param comment_text 评论内容
-## @param comment_score 评论分数
+@brief 评论类
+@param comment_owner 评论者
+@param comment_text 评论内容
+@param comment_score 评论分数
 '''
 class Comment:
     comment_owner:Name = ""
@@ -48,12 +52,12 @@ class Comment:
         self.commentTime = time
     
 '''
-## @brief 日记类
-## @param journal_name 日记名称
-## @param journal_grade 日记评分
-## @param journal_content 日记内容
-## @param journal_comment 日记评论
-## @param journal_date 日记日期
+@brief 日记类
+@param journal_name 日记名称
+@param journal_grade 日记评分
+@param journal_content 日记内容
+@param journal_comment 日记评论
+@param journal_date 日记日期
 '''
 class journal:
     journal_name:Name = ""
@@ -69,6 +73,13 @@ class journal:
         self.journalComment = comment
         self.journalDate = date
 
+'''
+@param start 起点
+@param destination 终点
+@param length 路径长度
+@param crowd 拥挤度
+@param type 路径类型
+'''
 class Road:
     start:Building
     destination:Building
@@ -81,9 +92,34 @@ class Road:
         self.destination = destination
         self.length = length
         self.crowd = crowd
+    def __eq__(self, other):
+        if isinstance(other, Road):
+            return self.start == other.start and \
+                    self.destination == other.destination and \
+                    self.length == other.length and \
+                    self.crowd == other.crowd and \
+                    self.type == other.type
+        return False
 
-class area:
+'''
+@param building_group 建筑组
+@param road_group 路径组
+@param comment_group 评论组
+@param grade 评分
+'''
+class Area:
     building_group:Set[Building] = set()
-    road_group:Dict[Building,Set[Road]]
-    comment_group:Set[Comment]
-    grade:float
+    road_group:Dict[Building,Set[Road]] = dict()
+    comment_group:Set[Comment] = set()
+    grade:float = 0
+    
+    def __init__(self,building,road,comment,grade):
+        self.building_group = building
+        self.road_group = road
+        self.comment_group = comment
+        self.grade = grade
+    def get_average_degree(self):
+        total = 0.0
+        for value in self.road_group.values():
+            total += len(value)
+        return total / len(self.road_group)

@@ -5,11 +5,13 @@ import time
 ## @type Name 名称
 ## @type Function 功能
 ## @type Text 文本
+## @type Road 道路
 '''
 Location = Tuple[float,float]
 Function = Set[str]
 Name = str
 Text = List[str]
+Road = Tuple[str,str,float,float]
 
 '''
 ## @brief 建筑类
@@ -28,18 +30,6 @@ class Building:
         self.__buildingLocation = location
         self.__buildingName = name
         self.__buildingFunction = function
-    def getBuildingLocation(self):
-        return self.__buildingLocation
-    def getBuildingName(self):
-        return self.__buildingName
-    def getBuildingFunction(self):
-        return self.__buildingFunction
-    def setBuildingFunction(self,function):
-        self.__buildingFunction = set(function)
-    def setBuildingName(self,name):
-        self.__buildingName = str(name)
-    def setBuildingLocation(self,location):
-        self.__buildingLocation = tuple(location)
 
 '''
 ## @brief 评论类
@@ -58,23 +48,7 @@ class Comment:
         self.__commentText = text
         self.__commentScore = score
         self.__commentTime = time
-    def getCommentOwner(self):
-        return self.__commentOwner
-    def getCommentText(self):
-        return self.__commentText
-    def getCommentScore(self):
-        return self.__commentScore
-    def getCommentTime(self):
-        return self.__commentTime
-    def setCommentOwner(self,owner):
-        self.__commentOwner = str(owner)
-    def setCommentText(self,text):
-        self.__commentText = list(text)
-    def setCommentScore(self,score):
-        self.__commentScore = score
-    def setCommentTime(self,time):
-        self.__commentTime = tuple(time)
-
+    
 '''
 ## @brief 日记类
 ## @param journalName 日记名称
@@ -97,23 +71,6 @@ class journal:
         self.__journalComment = comment
         self.__journalDate = date
 
-    def getJournalName(self):
-        return self.__journalName
-    def getJournalGrade(self):
-        return self.__journalGrade
-    def getJournalContent(self):
-        return self.__journalContent
-    def getJournalComment(self):
-        return self.__journalComment
-    def getJournalDate(self):
-        return self.__journalDate
-    def setJournalName(self,name):
-        self.__journalName = str(name)
-    def setJournalGrade(self,grade):
-        self.__journalGrade = grade
-    def setJournalContent(self,content):
-        self.__journalContent = list(content)
-    def setJournalComment(self,comment):
-        self.__journalComment = set(comment)
-    def setJournalDate(self,date):
-        self.__journalDate= tuple(date)
+#TODO: finish this
+class area:
+    buildingGroup:Set[Building] = set()

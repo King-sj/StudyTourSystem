@@ -21,3 +21,13 @@ echo -e "\033[0;31m ERROR: $1 \033[0m"
 bug() {
 echo -e "\033[0;31m BUG: $1 \033[0m"
 }
+
+
+# Assign the script's name with its path
+SCRIPT="$0"
+
+# Extract the directory from the script path
+DIR=$(dirname "$SCRIPT")
+
+# Print the directory
+# echo "脚本所在目录是: ${DIR}"

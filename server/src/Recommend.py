@@ -1,5 +1,4 @@
 from src.DataType import *
-
 '''
 ## @note 排序算法
 ## @param array 对象列表

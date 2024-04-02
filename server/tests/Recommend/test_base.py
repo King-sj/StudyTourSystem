@@ -1,10 +1,10 @@
 import sys
-sys.path.append("..\\..")
-
+sys.path.append("server")
 from src.Recommend import *
 from src.DataType import *
 
 def test_sort_up():
+    sys.path.append("..\\..")
     test = [Building((0,0),set(),"d"),Building((0,0),set(),"v"),Building((0,0),set(),"b"),Building((0,0),set(),"a")]
     expected_result = [Building((0,0),set(),"a"),Building((0,0),set(),"b"),Building((0,0),set(),"d"),Building((0,0),set(),"v")]
     result = sort(test,"building_name")
@@ -12,6 +12,7 @@ def test_sort_up():
         assert result[x].building_name == expected_result[x].building_name
 
 def test_sort_down():
+    sys.path.append("..\\..")
     test = [Building((0,0),set(),"d"),Building((0,0),set(),"v"),Building((0,0),set(),"b"),Building((0,0),set(),"a")]
     expected_result = [Building((0,0),set(),"v"),Building((0,0),set(),"d"),Building((0,0),set(),"b"),Building((0,0),set(),"a")]
     result = sort(test,"building_name",1)

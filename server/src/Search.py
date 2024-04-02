@@ -1,4 +1,4 @@
-from DataType import *
+from src.DataType import *
 
 # KMP算法用于模式搜索
 def KMPSearch(pat, txt):

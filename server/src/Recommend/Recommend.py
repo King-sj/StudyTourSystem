@@ -1,4 +1,4 @@
-from DataType import *
+from server.src.Data.DataType import *
 import random
 
 '''

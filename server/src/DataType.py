@@ -19,11 +19,11 @@ Text = List[str]
 @param building_function 功能
 '''
 class Building:
-    building_id:int = 0x0000000000000001
+    building_id:int = 0x0000000000000000
     building_location:Location = tuple()
     building_name:Name = ""
     building_function:Function = set()
-    def __init__(self,location,function,name,id):
+    def __init__(self,location,function,name,id=0):
         self.building_location = location
         self.building_name = name
         self.building_function = function
@@ -75,15 +75,15 @@ class journal:
         self.journalDate = date
 
 '''
-@param start 起点
-@param destination 终点
+@param start 起点 id
+@param destination 终点 id
 @param length 路径长度
 @param crowd 拥挤度
 @param type 路径类型
 '''
 class Road:
-    start:Building
-    destination:Building
+    start:int
+    destination:int
     length:float
     crowd:float
     type:str
@@ -101,38 +101,50 @@ class Road:
                     self.crowd == other.crowd and \
                     self.type == other.type
         return False
+    def __hash__(self):
+        return hash((self.start, self.destination, self.length, self.crowd, self.type))
+        
 
 '''
 @param building_group 建筑组
 @param road_group 路径组
 @param comment_group 评论组
 @param grade 评分
+@param area_id 区域 ID
 '''
 class Area:
     area_id:int = 0x0000000000000000
-    building_group:Set[Building] = set()
+    building_group:Dict[int,Building] = dict()
     road_group:Dict[int,Set[Road]] = dict()
     comment_group:Set[Comment] = set()
     grade:float = 0
-    def __init__(self,building,road,comment,grade):
+    def __init__(self,building,road,comment,grade,id):
         self.building_group = building
         self.road_group = road
         self.comment_group = comment
         self.grade = grade
+        self.area_id = id
+
     def get_average_degree(self):
         total = 0.0
         for value in self.road_group.values():
             total += len(value)
-        return total / len(self.road_group)
+        return total / len(self.building_group)
+    
     def add_building(self,building):
-        self.building_group.add(building)
+        building.building_id = len(self.building_group) + 1 + self.area_id
+        self.building_group[building.building_id] = building
+
     def add_road(self,road):
-        if road.start not in self.building_group:self.building_group.add(road.start)
-        if road.destination not in self.building_group:self.building_group.add(road.destination)
-        if road.start.building_id not in self.road_group.keys():self.road_group[road.start.building_id]= set()
-        self.road_group[road.start.building_id].add(road)
+        if road.start not in self.building_group.keys() or road.destination not in self.building_group.keys():
+            raise AttributeError('AttributeError:building is not exist')
+        if road.start not in self.road_group.keys():
+            self.road_group[road.start] = set()
+        self.road_group[road.start].add(road)
+
     def get_building(self,id):
-        for building in self.building_group:
-            if building.building_id == id:
-                return building
-        return False
+        if id not in self.building_group.keys():
+            raise AttributeError('AttributeError:building is not exist')
+        return self.building_group[id]
+    
+    def __hash__(self):return self.area_id

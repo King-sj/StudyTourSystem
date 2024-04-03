@@ -1,4 +1,6 @@
-from src.DataType import *
+from DataType import *
+from Recommend import *
+from Route_select import *
 
 # KMP算法用于模式搜索
 def KMPSearch(pat, txt):
@@ -49,15 +51,36 @@ def computeLPSArray(pat, M, lps):
 def search_keyword_in_classes(keyword, instances):
     results = {}
     for instance in instances:
+        total_occurrences = 0
         for attribute, value in vars(instance).items():
             if isinstance(value, str):
                 found_positions = KMPSearch(keyword, value)
                 if found_positions:
-                    results.setdefault(instance, []).append((attribute, len(found_positions)))
+                    occurrences = len(found_positions)
+                    total_occurrences += occurrences
+                    if instance not in results:
+                        results[instance] = []  # 确保此处已初始化
+                    results[instance].append((attribute, occurrences))
             elif isinstance(value, list) or isinstance(value, set):
                 for item in value:
                     if isinstance(item, str):
                         found_positions = KMPSearch(keyword, item)
                         if found_positions:
-                            results.setdefault(instance, []).append((attribute, len(found_positions)))
-    return results
+                            occurrences = len(found_positions)
+                            total_occurrences += occurrences
+                            if instance not in results:
+                                results[instance] = []  # 确保此处已初始化
+                            results[instance].append((attribute, occurrences))
+        results[instance] = total_occurrences  # 使用总出现次数更新实例
+
+    # 根据关键字出现的总次数对结果进行排序
+    # 将字典转换为元组的列表，对其进行排序，如果需要，再转换回字典
+    sorted_results = sort(results.items(), key="", mode=0)
+    # 如果需要将排序后的结果作为字典：
+    sorted_results_dict = dict(sorted_results)
+    return sorted_results_dict
+
+comment2 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+journal2 = journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {comment2}, time.localtime(time.time()))
+keyword_results = search_keyword_in_classes("Not", [comment2, journal2])
+print(keyword_results)

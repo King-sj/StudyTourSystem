@@ -29,12 +29,12 @@ def get_crowd(road:Road,start_degree,destination_degree,average_degree):
 def get_time(area:Area,road:Road,v:float):
     if road.start not in area.building_group or road.destination not in area.building_group:
         raise AttributeError('AttributeError:building is not exist')
-    if road not in area.road_group[road.start] or road not in area.road_group[road.destination]:
+    if road not in area.road_group[road.start.building_id] or road not in area.road_group[road.destination.building_id]:
         raise AttributeError('AttributeError:road is not exist')
     if v <= 0:
         raise AttributeError('AttributeError:speed must be positive')
-    start_degree = len(area.road_group[road.start])
-    destination_degree = len(area.road_group[road.destination])
+    start_degree = len(area.road_group[road.start.building_id])
+    destination_degree = len(area.road_group[road.destination.building_id])
     return road.length / v \
     / (1+get_crowd(road,start_degree,destination_degree,area.get_average_degree()))
 
@@ -42,17 +42,16 @@ def get_shortest_road(area:Area,start:int,destination:int,mode:int = 0):
     heap = []
     prev = dict()
     dis = dict()
+    dis[start] = 0
+    heapq.heappush(heap,(0,start))
     for building in area.building_group:
-        if building.building_id == start:
-            dis[building.building_id] = 0.0
-            heapq.heappush(heap,(0.0,start))
-        else:dis[building.building_id] = float('inf')
+        if building.building_id != start:dis[building.building_id] = float('inf')
     while(len(heap)>0):
         current = heapq.heappop(heap)
-        if current[0] == destination: return current[1],prev
-        for e in area.road_group[current[0]]:
+        if current[1] == destination: return current[0],prev
+        for e in area.road_group[current[1]]:
             if dis[e.start.building_id]+e.length < dis[e.destination.building_id]:
                 dis[e.destination.building_id] = dis[e.start.building_id]+e.length
                 heapq.heappush(heap,(dis[e.destination.building_id],e.destination.building_id))
-                prev[e.destination.building_id] = current[0]
+                prev[e.destination.building_id] = current[1]
     return -1,prev

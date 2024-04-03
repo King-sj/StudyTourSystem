@@ -32,6 +32,7 @@ class Building:
         if isinstance(other, Building):
             return self.building_id == other.building_id
         return False
+    def __hash__(self):return self.building_id
 
 '''
 @brief 评论类
@@ -110,10 +111,9 @@ class Road:
 class Area:
     area_id:int = 0x0000000000000000
     building_group:Set[Building] = set()
-    road_group:Dict[Building,Set[Road]] = dict()
+    road_group:Dict[int,Set[Road]] = dict()
     comment_group:Set[Comment] = set()
     grade:float = 0
-    
     def __init__(self,building,road,comment,grade):
         self.building_group = building
         self.road_group = road
@@ -129,5 +129,10 @@ class Area:
     def add_road(self,road):
         if road.start not in self.building_group:self.building_group.add(road.start)
         if road.destination not in self.building_group:self.building_group.add(road.destination)
-        if road.start not in self.road_group.keys():self.road_group[road.start] = set()
-        self.road_group[road.start].add(road)
+        if road.start.building_id not in self.road_group.keys():self.road_group[road.start.building_id]= set()
+        self.road_group[road.start.building_id].add(road)
+    def get_building(self,id):
+        for building in self.building_group:
+            if building.building_id == id:
+                return building
+        return False

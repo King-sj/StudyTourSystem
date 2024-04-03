@@ -72,14 +72,7 @@ def search_keyword_in_classes(keyword, instances):
                                 results[instance] = []  # 确保此处已初始化
                             results[instance].append((attribute, occurrences))
         results[instance] = total_occurrences  # 使用总出现次数更新实例
-
-    # 根据关键字出现的总次数对结果进行排序
-    # 将字典转换为元组的列表，对其进行排序，如果需要，再转换回字典
-    sorted_results = sort(results.items(), key="", mode=0)
-    # 如果需要将排序后的结果作为字典：
-    sorted_results_dict = dict(sorted_results)
-    return sorted_results_dict
-
+    return results
 comment2 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
 journal2 = journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {comment2}, time.localtime(time.time()))
 keyword_results = search_keyword_in_classes("Not", [comment2, journal2])

@@ -118,12 +118,12 @@ class Area:
     road_group:Dict[int,Set[Road]] = dict()
     comment_group:Set[Comment] = set()
     grade:float = 0
-    def __init__(self,building,road,comment,grade,id):
-        self.building_group = building
-        self.road_group = road
-        self.comment_group = comment
+    def __init__(self,building_group,road_group,comment_group,grade,area_id):
+        self.building_group = building_group
+        self.road_group = road_group
+        self.comment_group = comment_group
         self.grade = grade
-        self.area_id = id
+        self.area_id = area_id
 
     def get_average_degree(self):
         total = 0.0
@@ -135,12 +135,15 @@ class Area:
         building.building_id = len(self.building_group) + 1 + self.area_id
         self.building_group[building.building_id] = building
 
-    def add_road(self,road):
+    def add_road(self,road:Road):
         if road.start not in self.building_group.keys() or road.destination not in self.building_group.keys():
             raise AttributeError('AttributeError:building is not exist')
         if road.start not in self.road_group.keys():
             self.road_group[road.start] = set()
+        if road.destination not in self.road_group.keys():
+            self.road_group[road.destination] = set()
         self.road_group[road.start].add(road)
+        self.road_group[road.destination].add(Road(road.type,road.destination,road.start,road.length,road.crowd))
 
     def get_building(self,id):
         if id not in self.building_group.keys():

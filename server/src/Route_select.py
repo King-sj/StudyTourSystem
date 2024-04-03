@@ -1,6 +1,6 @@
 import time
 import heapq
-from DataType import*
+from DataType import *
 
 '''
 @param start_degree 起点度

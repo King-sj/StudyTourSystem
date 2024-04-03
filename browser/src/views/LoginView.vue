@@ -2,11 +2,13 @@
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { useStorage } from '@vueuse/core'
-import User from "@/models/User"
+import { useStorage,useTimestamp } from '@vueuse/core'
+import { useUserStore } from '@/stores/user';
+
 const username = ref('');
 const password = ref('');
 const router = useRouter();
+const userStore = useUserStore()
 const login = async () => {
   try {
     // const { data } = await axios.post('http://localhost:5000/login', {
@@ -15,8 +17,10 @@ const login = async () => {
     // });
 
     // check
-    const user = new User(username.value);
-    useStorage('user',user);
+    userStore.update({
+      name:username.value,
+      lastLoginTimeStamp:useTimestamp().value
+    })
 
     router.push({name:"home"})
   } catch (error) {

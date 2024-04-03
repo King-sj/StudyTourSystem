@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useTimestamp } from '@vueuse/core'
-import { useStorage } from '@vueuse/core';
-const user =  useStorage("user", null);
+import { useUserStore } from '@/stores/user';
+const userData = useUserStore().userData
 </script>
 <template>
   This is help page
-  {{user}}
+  {{userData}}
 </template>

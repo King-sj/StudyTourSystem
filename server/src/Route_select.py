@@ -1,6 +1,6 @@
 import time
-
-from DataType import*
+import heapq
+from DataType import *
 
 '''
 @param start_degree 起点度
@@ -37,3 +37,22 @@ def get_time(area:Area,road:Road,v:float):
     destination_degree = len(area.road_group[road.destination])
     return road.length / v \
     / (1+get_crowd(road,start_degree,destination_degree,area.get_average_degree()))
+
+def get_shortest_road(area:Area,start:int,destination:int,mode:int = 0):
+    heap = []
+    prev = dict()
+    dis = dict()
+    for building in area.building_group:
+        if building.building_id == start:
+            dis[building.building_id] = 0.0
+            heapq.heappush(heap,(0.0,start))
+        else:dis[building.building_id] = float('inf')
+    while(len(heap)>0):
+        current = heapq.heappop(heap)
+        if current[0] == destination: return current[1],prev
+        for e in area.road_group[current[0]]:
+            if dis[e.start.building_id]+e.length < dis[e.destination.building_id]:
+                dis[e.destination.building_id] = dis[e.start.building_id]+e.length
+                heapq.heappush(heap,(dis[e.destination.building_id],e.destination.building_id))
+                prev[e.destination.building_id] = current[0]
+    return -1,prev

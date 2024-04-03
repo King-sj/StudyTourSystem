@@ -32,7 +32,7 @@ def KMPSearch(pat, txt):
 
 def computeLPSArray(pat, M, lps):
     len = 0 # 前一个最长前缀后缀的长度
- 
+
     lps[0] = 0 # lps[0]始终为0
     i = 1
     while i < M:

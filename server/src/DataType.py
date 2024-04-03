@@ -13,25 +13,25 @@ Text = List[str]
 
 '''
 @brief 建筑类
+@param building_id 建筑 ID
 @param building_location 位置
 @param building_name 名称
 @param building_function 功能
 '''
 class Building:
+    building_id:int = 0x0000000000000001
     building_location:Location = tuple()
     building_name:Name = ""
     building_function:Function = set()
-    def __init__(self,location,function,name):
+    def __init__(self,location,function,name,id):
         self.building_location = location
         self.building_name = name
         self.building_function = function
+        self.building_id = id
     def __eq__(self, other):
         if isinstance(other, Building):
-            return self.building_location == other.building_location and \
-                    self.building_name == other.building_name and \
-                    self.building_function == other.building_function
+            return self.building_id == other.building_id
         return False
-    
 
 '''
 @brief 评论类
@@ -108,6 +108,7 @@ class Road:
 @param grade 评分
 '''
 class Area:
+    area_id:int = 0x0000000000000000
     building_group:Set[Building] = set()
     road_group:Dict[Building,Set[Road]] = dict()
     comment_group:Set[Comment] = set()
@@ -123,3 +124,10 @@ class Area:
         for value in self.road_group.values():
             total += len(value)
         return total / len(self.road_group)
+    def add_building(self,building):
+        self.building_group.add(building)
+    def add_road(self,road):
+        if road.start not in self.building_group:self.building_group.add(road.start)
+        if road.destination not in self.building_group:self.building_group.add(road.destination)
+        if road.start not in self.road_group.keys():self.road_group[road.start] = set()
+        self.road_group[road.start].add(road)

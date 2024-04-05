@@ -4,7 +4,7 @@ from src.Route_select import *
 from src.DataType import *
 import random
 
-
+#TODO: test this
 def test_shortest_road():
     # 创建10个Building对象
     buildings = {i: Building((0,0),set(),str(i)) for i in range(1, 11)}

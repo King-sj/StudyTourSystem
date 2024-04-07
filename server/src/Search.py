@@ -60,7 +60,7 @@ def search_keyword_in_classes(keyword, instances):
                     total_occurrences += occurrences
                     if instance not in results:
                         results[instance] = []  # 确保此处已初始化
-                    results[instance].append((attribute, occurrences))
+                    results[instance]=[attribute, occurrences]
             elif isinstance(value, list) or isinstance(value, set):
                 for item in value:
                     if isinstance(item, str):
@@ -70,10 +70,16 @@ def search_keyword_in_classes(keyword, instances):
                             total_occurrences += occurrences
                             if instance not in results:
                                 results[instance] = []  # 确保此处已初始化
-                            results[instance].append((attribute, occurrences))
-        results[instance] = total_occurrences  # 使用总出现次数更新实例
-    return results
+                            results[instance]=[attribute, occurrences]
+        # results[instance] = total_occurrences  # 使用总出现次数更新实例
+    sort_results = sorted(results.items(), key=lambda x: x[1],)
+    return sort_results
 comment2 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
-journal2 = journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {comment2}, time.localtime(time.time()))
-keyword_results = search_keyword_in_classes("Not", [comment2, journal2])
+comment1 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment3 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment4 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment5 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+journal2 = journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {comment1,comment3,comment4,comment5,comment2}, time.localtime(time.time()))
+keyword_results = dict(search_keyword_in_classes("Not", [comment1,comment3,comment4,comment5,comment2, journal2]))
 print(keyword_results)
+print(keyword_results.keys())

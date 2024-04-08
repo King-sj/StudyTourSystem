@@ -1,4 +1,6 @@
-from src.DataType import *
+from DataType import *
+from Recommend import *
+from Route_select import *
 
 # KMP算法用于模式搜索
 
@@ -32,9 +34,9 @@ def KMPSearch(pat, txt):
 
 
 def computeLPSArray(pat, M, lps):
-    len = 0  # 前一个最长前缀后缀的长度
+    len = 0 # 前一个最长前缀后缀的长度
 
-    lps[0] = 0  # lps[0]始终为0
+    lps[0] = 0 # lps[0]始终为0
     i = 1
     while i < M:
         if pat[i] == pat[len]:
@@ -54,17 +56,35 @@ def computeLPSArray(pat, M, lps):
 def search_keyword_in_classes(keyword, instances):
     results = {}
     for instance in instances:
+        total_occurrences = 0
         for attribute, value in vars(instance).items():
             if isinstance(value, str):
                 found_positions = KMPSearch(keyword, value)
                 if found_positions:
-                    results.setdefault(instance, []).append(
-                        (attribute, len(found_positions)))
+                    occurrences = len(found_positions)
+                    total_occurrences += occurrences
+                    if instance not in results:
+                        results[instance] = []  # 确保此处已初始化
+                    results[instance]=[attribute, occurrences]
             elif isinstance(value, list) or isinstance(value, set):
                 for item in value:
                     if isinstance(item, str):
                         found_positions = KMPSearch(keyword, item)
                         if found_positions:
-                            results.setdefault(instance, []).append(
-                                (attribute, len(found_positions)))
-    return results
+                            occurrences = len(found_positions)
+                            total_occurrences += occurrences
+                            if instance not in results:
+                                results[instance] = []  # 确保此处已初始化
+                            results[instance]=[attribute, occurrences]
+        # results[instance] = total_occurrences  # 使用总出现次数更新实例
+    sort_results = sorted(results.items(), key=lambda x: x[1],)
+    return sort_results
+comment2 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment1 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment3 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment4 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+comment5 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
+journal2 = journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {comment1,comment3,comment4,comment5,comment2}, time.localtime(time.time()))
+keyword_results = dict(search_keyword_in_classes("Not", [comment1,comment3,comment4,comment5,comment2, journal2]))
+print(keyword_results)
+print(keyword_results.keys())

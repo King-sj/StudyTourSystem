@@ -13,25 +13,26 @@ Text = List[str]
 
 '''
 @brief 建筑类
+@param building_id 建筑 ID
 @param building_location 位置
 @param building_name 名称
 @param building_function 功能
 '''
 class Building:
+    building_id:int = 0x0000000000000000
     building_location:Location = tuple()
     building_name:Name = ""
     building_function:Function = set()
-    def __init__(self,location,function,name):
+    def __init__(self,location,function,name,id=0):
         self.building_location = location
         self.building_name = name
         self.building_function = function
+        self.building_id = id
     def __eq__(self, other):
         if isinstance(other, Building):
-            return self.building_location == other.building_location and \
-                    self.building_name == other.building_name and \
-                    self.building_function == other.building_function
+            return self.building_id == other.building_id
         return False
-    
+    def __hash__(self):return self.building_id
 
 '''
 @brief 评论类
@@ -74,15 +75,15 @@ class journal:
         self.journalDate = date
 
 '''
-@param start 起点
-@param destination 终点
+@param start 起点 id
+@param destination 终点 id
 @param length 路径长度
 @param crowd 拥挤度
 @param type 路径类型
 '''
 class Road:
-    start:Building
-    destination:Building
+    start:int
+    destination:int
     length:float
     crowd:float
     type:str
@@ -100,26 +101,53 @@ class Road:
                     self.crowd == other.crowd and \
                     self.type == other.type
         return False
+    def __hash__(self):
+        return hash((self.start, self.destination, self.length, self.crowd, self.type))
+        
 
 '''
 @param building_group 建筑组
 @param road_group 路径组
 @param comment_group 评论组
 @param grade 评分
+@param area_id 区域 ID
 '''
 class Area:
-    building_group:Set[Building] = set()
-    road_group:Dict[Building,Set[Road]] = dict()
+    area_id:int = 0x0000000000000000
+    building_group:Dict[int,Building] = dict()
+    road_group:Dict[int,Set[Road]] = dict()
     comment_group:Set[Comment] = set()
     grade:float = 0
-    
-    def __init__(self,building,road,comment,grade):
-        self.building_group = building
-        self.road_group = road
-        self.comment_group = comment
+    def __init__(self,building_group,road_group,comment_group,grade,area_id):
+        self.building_group = building_group
+        self.road_group = road_group
+        self.comment_group = comment_group
         self.grade = grade
+        self.area_id = area_id
+
     def get_average_degree(self):
         total = 0.0
         for value in self.road_group.values():
             total += len(value)
-        return total / len(self.road_group)
+        return total / len(self.building_group)
+    
+    def add_building(self,building):
+        building.building_id = len(self.building_group) + 1 + self.area_id
+        self.building_group[building.building_id] = building
+
+    def add_road(self,road:Road):
+        if road.start not in self.building_group.keys() or road.destination not in self.building_group.keys():
+            raise AttributeError('AttributeError:building is not exist')
+        if road.start not in self.road_group.keys():
+            self.road_group[road.start] = set()
+        if road.destination not in self.road_group.keys():
+            self.road_group[road.destination] = set()
+        self.road_group[road.start].add(road)
+        self.road_group[road.destination].add(Road(road.type,road.destination,road.start,road.length,road.crowd))
+
+    def get_building(self,id):
+        if id not in self.building_group.keys():
+            raise AttributeError('AttributeError:building is not exist')
+        return self.building_group[id]
+    
+    def __hash__(self):return self.area_id

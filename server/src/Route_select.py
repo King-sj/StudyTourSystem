@@ -1,6 +1,6 @@
 import time
-
-from DataType import*
+import heapq
+from DataType import *
 
 '''
 @param start_degree 起点度
@@ -27,13 +27,29 @@ def get_crowd(road:Road,start_degree,destination_degree,average_degree):
 @return 时间
 '''
 def get_time(area:Area,road:Road,v:float):
-    if road.start not in area.building_group or road.destination not in area.building_group:
-        raise AttributeError('AttributeError:building is not exist')
-    if road not in area.road_group[road.start] or road not in area.road_group[road.destination]:
-        raise AttributeError('AttributeError:road is not exist')
-    if v <= 0:
-        raise AttributeError('AttributeError:speed must be positive')
-    start_degree = len(area.road_group[road.start])
-    destination_degree = len(area.road_group[road.destination])
-    return road.length / v \
-    / (1+get_crowd(road,start_degree,destination_degree,area.get_average_degree()))
+    check = False
+    for value in area.road_group.values():
+        for r in value:
+            if r == road:check = True
+    if not check:raise AttributeError('Road not in area')
+    road.crowd = get_crowd(road,len(area.road_group[road.start]),
+                        len(area.road_group[road.destination]),area.get_average_degree())
+    return road.length/ v / (1 + road.crowd)
+
+def get_shortest_road(area:Area,start:int,destination:int,mode:int = 0):
+    heap = []
+    prev = dict()
+    dis = dict()
+    dis[start] = 0
+    heapq.heappush(heap,(0,start))
+    for building_id in area.building_group.keys():
+        if building_id != start:dis[building_id] = float('inf')
+    while(len(heap)>0):
+        current = heapq.heappop(heap)
+        if current[1] == destination: return current[0],prev
+        for e in area.road_group[current[1]]:
+            if dis[e.start]+e.length < dis[e.destination]:
+                dis[e.destination] = dis[e.start]+e.length
+                heapq.heappush(heap,(dis[e.destination],e.destination))
+                prev[e.destination] = current[1]
+    return -1,prev

@@ -1,4 +1,4 @@
-from src.DataType import *
+from DataType import *
 '''
 ## @note 排序算法
 ## @param array 对象列表

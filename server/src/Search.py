@@ -1,15 +1,17 @@
 from src.DataType import *
 
 # KMP算法用于模式搜索
+
+
 def KMPSearch(pat, txt):
     M = len(pat)
     N = len(txt)
     # 创建lps[]将会为模式持有最长的前缀后缀值
     lps = [0]*M
-    j = 0 # pat[]的索引
+    j = 0  # pat[]的索引
     # 预处理模式（计算lps[]数组）
     computeLPSArray(pat, M, lps)
-    i = 0 # txt[]的索引
+    i = 0  # txt[]的索引
     results = []
     while i < N:
         if pat[j] == txt[i]:
@@ -28,10 +30,11 @@ def KMPSearch(pat, txt):
                 i += 1
     return results
 
+
 def computeLPSArray(pat, M, lps):
-    len = 0 # 前一个最长前缀后缀的长度
- 
-    lps[0] = 0 # lps[0]始终为0
+    len = 0  # 前一个最长前缀后缀的长度
+
+    lps[0] = 0  # lps[0]始终为0
     i = 1
     while i < M:
         if pat[i] == pat[len]:
@@ -46,6 +49,8 @@ def computeLPSArray(pat, M, lps):
                 i += 1
 
 # 函数在类实例的文本属性中搜索关键字
+
+
 def search_keyword_in_classes(keyword, instances):
     results = {}
     for instance in instances:
@@ -53,11 +58,13 @@ def search_keyword_in_classes(keyword, instances):
             if isinstance(value, str):
                 found_positions = KMPSearch(keyword, value)
                 if found_positions:
-                    results.setdefault(instance, []).append((attribute, len(found_positions)))
+                    results.setdefault(instance, []).append(
+                        (attribute, len(found_positions)))
             elif isinstance(value, list) or isinstance(value, set):
                 for item in value:
                     if isinstance(item, str):
                         found_positions = KMPSearch(keyword, item)
                         if found_positions:
-                            results.setdefault(instance, []).append((attribute, len(found_positions)))
+                            results.setdefault(instance, []).append(
+                                (attribute, len(found_positions)))
     return results

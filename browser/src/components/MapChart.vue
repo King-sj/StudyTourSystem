@@ -46,6 +46,7 @@ const lushuPoint = ref({
     @moving="syncCenterAndZoom"
     @moveend="syncCenterAndZoom"
     @zoomend="syncCenterAndZoom"
+    map-type="BMAP_NORMAL_MAP"
     >
     <bm-control :offset="{width: '10px', height: '10px'}">
       <bm-auto-complete v-model="keyword" :sugStyle="{zIndex: 1}">
@@ -53,7 +54,6 @@ const lushuPoint = ref({
       </bm-auto-complete>
     </bm-control>
     <bm-local-search :keyword="keyword" :auto-viewport="true"></bm-local-search>
-    <bm-transit start="百度大厦" end="北京邮电大学西门" :auto-viewport="true" location="北京"></bm-transit>
     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
     <bm-polyline :path="polygonPath"  :key="polygonPath"></bm-polyline>
   </baidu-map>

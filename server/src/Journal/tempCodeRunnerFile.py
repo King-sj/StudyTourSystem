@@ -1,0 +1,1 @@
+            b = b.encode('utf-8')

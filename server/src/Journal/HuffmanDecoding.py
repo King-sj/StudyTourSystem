@@ -58,7 +58,7 @@ class HuffmanDecoder:
 if __name__ == '__main__':
     encoded_text = "server\\src\\Journal\\hfmTree.txt"
     zip_path = "server\\src\\Journal\\hfmzip.zip"
-    decoder_path = "server\\src\\Journal\\hfmDecoder.bmp"
+    decoder_path = "server\\src\\Journal\\hfmDecoder.txt"
 
     decoder = HuffmanDecoder(encoded_text, zip_path, decoder_path)
     decoder.Huffman_Decoding_main()

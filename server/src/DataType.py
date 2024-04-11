@@ -60,7 +60,7 @@ class Comment:
 @param journal_comment 日记评论
 @param journal_date 日记日期
 '''
-class journal:
+class Journal:
     journal_name:Name = ""
     journal_grade:float = 0
     journal_content:Text = list()

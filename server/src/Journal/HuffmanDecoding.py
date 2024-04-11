@@ -5,12 +5,13 @@ class HuffmanDecoder:
         self.encoded_text = encoded_text
         self.zip_path = zip_path
         self.decoder_path = decoder_path
-        self.tree , self.i = self.reshape_huffman_tree()
+        self.tree , self.i, self.length = self.reshape_huffman_tree()
 
     def reshape_huffman_tree(self):
         nodes = []
         i = 0
         with open(self.encoded_text, 'r') as f:
+            length = int(f.readline())
             while True:
                 b = f.readline().split()
                 if not b:
@@ -29,16 +30,16 @@ class HuffmanDecoder:
                     nodes[i].rchild = int(b[4])
                 del b  
                 i += 1   
-        return nodes, i      
+        return nodes, i, length      
 
     def Huffman_Decoding(self):
-        with open(self.zip_path, 'r') as fr:
+        with open(self.zip_path, 'rb') as fr:
+            data = fr.read()
+            binstr = "".join(["{:08b}".format(char) for char in data])
+            binstr = binstr[:self.length]
             i = self.i-1
             b = []
-            while True:
-                c = fr.read(1)
-                if not c:
-                    break
+            for c in binstr:
                 if c == '0' or c == '1':
                     if c == '0' and self.tree[i].lchild != -1:
                         i = self.tree[i].lchild

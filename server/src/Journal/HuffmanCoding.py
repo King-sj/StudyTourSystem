@@ -8,6 +8,7 @@ class HuffmanCoder:
         self.char_weights = self.read_file_data()
         self.tree = []
         self.codes = {}
+        self.length = 0
 
     def read_file_data(self):
         with open(self.input_file, "rb") as f:
@@ -46,10 +47,6 @@ class HuffmanCoder:
             nodes[i].weight = nodes[s1].weight + nodes[s2].weight
 
         self.tree = nodes
-        
-        with open(self.output_tree_file, "w+", encoding='utf-8') as f:
-            for node in nodes:
-                f.write(f"{node.name} {node.weight} {node.parent} {node.lchild} {node.rchild}\n")
 
     def huffman_coding(self):
         for i in range(len(self.tree)):
@@ -66,17 +63,30 @@ class HuffmanCoder:
             if self.tree[i].name is not None:
                 self.codes[self.tree[i].name] = code
 
-        with open(self.input_file, "rb") as fr, open(self.output_code_file, "w+") as fw:
+        with open(self.input_file, "rb") as fr, open(self.output_code_file, "wb+") as fw:
+            data = ""
             while True:
                 c = fr.read(1)
                 if not c:
                     break
                 int_value = int.from_bytes(c, byteorder='big')
-                fw.write(self.codes.get(int_value, ""))
+                data += self.codes.get(int_value, "")
+            self.length = len(data)
+            if r := self.length % 8:
+                data += "0"*(8-r)
+            b = bytes([int(data[i:i+8], 2) for i in range(0, len(data), 8)])
+            fw.write(b)
+
+    def export_bit_length(self):
+            with open(self.output_tree_file, "w+", encoding='utf-8') as f:
+                f.write(f"{self.length}\n")
+                for node in self.tree:
+                    f.write(f"{node.name} {node.weight} {node.parent} {node.lchild} {node.rchild}\n")
 
     def Huffman_coding_main(self):
         self.build_huffman_tree()
         self.huffman_coding()
+        self.export_bit_length()
 
 if __name__ == "__main__":
     input_file = "server\\src\\Journal\\Journal.txt"

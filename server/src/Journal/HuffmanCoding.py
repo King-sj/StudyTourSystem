@@ -79,9 +79,9 @@ class HuffmanCoder:
         self.huffman_coding()
 
 if __name__ == "__main__":
-    input_file = "StudyTourSystem\\server\\src\\Journal\\lena.bmp"
-    output_tree_file = "StudyTourSystem\\server\\src\\Journal\\hfmTree.txt"
-    output_code_file = "StudyTourSystem\\server\\src\\Journal\\hfmzip.zip"
+    input_file = "server\\src\\Journal\\Journal.txt"
+    output_tree_file = "server\\src\\Journal\\hfmTree.txt"
+    output_code_file = "server\\src\\Journal\\hfmzip.zip"
     
     huffman_coder = HuffmanCoder(input_file, output_tree_file, output_code_file)
     huffman_coder.Huffman_coding_main()

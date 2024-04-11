@@ -34,7 +34,7 @@ class HuffmanDecoder:
     def Huffman_Decoding(self):
         with open(self.zip_path, 'r') as fr:
             i = self.i-1
-            b = ""
+            b = []
             while True:
                 c = fr.read(1)
                 if not c:
@@ -45,10 +45,9 @@ class HuffmanDecoder:
                     if c == '1' and self.tree[i].rchild != -1:
                         i = self.tree[i].rchild
                     if self.tree[i].lchild == -1 and self.tree[i].rchild == -1:
-                        b += chr(self.tree[i].name)
+                        b.append(self.tree[i].name)
                         i = self.i-1
-            print(b)
-            b = b.encode('utf-8')
+            b = bytes(b)
             with open(self.decoder_path, 'wb+') as fw:
                 fw.write(b)
 
@@ -56,9 +55,9 @@ class HuffmanDecoder:
         self.Huffman_Decoding()
 
 if __name__ == '__main__':
-    encoded_text = "StudyTourSystem\\server\\src\\Journal\\hfmTree.txt"
-    zip_path = "StudyTourSystem\\server\\src\\Journal\\hfmzip.zip"
-    decoder_path = "StudyTourSystem\\server\\src\\Journal\\hfmDecoder.bmp"
+    encoded_text = "server\\src\\Journal\\hfmTree.txt"
+    zip_path = "server\\src\\Journal\\hfmzip.zip"
+    decoder_path = "server\\src\\Journal\\hfmDecoder.bmp"
 
     decoder = HuffmanDecoder(encoded_text, zip_path, decoder_path)
     decoder.Huffman_Decoding_main()

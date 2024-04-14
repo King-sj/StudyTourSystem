@@ -1,5 +1,5 @@
 import sys
-sys.path.append('server')
+sys.path.append("server")
 from src.Route_select import *
 from src.DataType import *
 import random

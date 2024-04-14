@@ -39,17 +39,42 @@ def get_time(area:Area,road:Road,v:float):
 def get_shortest_road(area:Area,start:int,destination:int,mode:int = 0):
     heap = []
     prev = dict()
-    dis = dict()
-    dis[start] = 0
+    st:Dict[int,bool] = dict();
+    dist:Dict[int,float] = dict()
+
+    for building in area.building_group.keys():
+        dist[building] = float('inf')
+        st[building] = False
+    
+    dist[start] = 0
+    prev[start] = -1
     heapq.heappush(heap,(0,start))
-    for building_id in area.building_group.keys():
-        if building_id != start:dis[building_id] = float('inf')
     while(len(heap)>0):
         current = heapq.heappop(heap)
+        if(st[current[1]]):continue
+        st[current[1]] = True
         if current[1] == destination: return current[0],prev
         for e in area.road_group[current[1]]:
-            if dis[e.start]+e.length < dis[e.destination]:
-                dis[e.destination] = dis[e.start]+e.length
-                heapq.heappush(heap,(dis[e.destination],e.destination))
+            if dist[e.start]+e.length < dist[e.destination]:
+                dist[e.destination] = dist[e.start]+e.length
                 prev[e.destination] = current[1]
-    return -1,prev
+                if(st[e.destination] == False):
+                    heapq.heappush(heap,(dist[e.destination],e.destination))
+    return -1,dict()
+
+
+def test_shortest_road():
+    # 创建10个Building对象
+    buildings = {i: Building((0,0),set(),str(i)) for i in range(1, 11)}
+
+    # 创建10条Road对象，每条Road的起点和终点都是一个Building
+    roads = {i: Road('road',i, (i % 10) + 1,i,0) for i in range(1, 11)}
+
+    # 创建一个Area对象
+    area = Area(dict(),dict(),set(),0,0)
+    for b in buildings.values():area.add_building(b)
+    for r in roads.values():area.add_road(r)
+    result = get_shortest_road(area,1,10)
+    return result[0] == 10 and result[1][10] == 1
+
+

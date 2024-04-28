@@ -1,5 +1,6 @@
 import time
 import heapq
+from typing import *
 from DataType import *
 
 '''
@@ -53,14 +54,21 @@ def get_shortest_road(area:Area,start:int,destination:int,mode:int = 0):
         current = heapq.heappop(heap)
         if(st[current[1]]):continue
         st[current[1]] = True
-        if current[1] == destination: return current[0],prev
+        if current[1] == destination:
+            res = []
+            i:int = destination
+            while(i != -1):
+                res.append(i)
+                i = prev[i]
+            res.reverse()
+            return dist[destination],res
         for e in area.road_group[current[1]]:
             if dist[e.start]+e.length < dist[e.destination]:
                 dist[e.destination] = dist[e.start]+e.length
                 prev[e.destination] = current[1]
                 if(st[e.destination] == False):
                     heapq.heappush(heap,(dist[e.destination],e.destination))
-    return -1,dict()
+    return -1,list()
 
 
 def test_shortest_road():

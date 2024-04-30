@@ -60,11 +60,11 @@ class Comment:
 @param journal_comment 日记评论
 @param journal_date 日记日期
 '''
-class journal:
+class Journal:
     journal_name:Name = ""
     journal_grade:float = 0
     journal_content:Text = list()
-    journal_comment:Set[Comment]
+    journal_comments:List[Comment] = list()
     journal_date:Tuple = time.localtime(time.time())
 
     def __init__(self,name,grade,content,comment,date):
@@ -116,7 +116,7 @@ class Area:
     area_id:int = 0x0000000000000000
     building_group:Dict[int,Building] = dict()
     road_group:Dict[int,Set[Road]] = dict()
-    comment_group:Set[Comment] = set()
+    comments:List[Comment] = list()
     grade:float = 0
     def __init__(self,building_group,road_group,comment_group,grade,area_id):
         self.building_group = building_group

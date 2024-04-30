@@ -55,6 +55,7 @@ def computeLPSArray(pat, M, lps):
 
 def search_keyword_in_classes(keyword, instances):
     results = {}
+    occurrences = 0
     for instance in instances:
         total_occurrences = 0
         for attribute, value in vars(instance).items():
@@ -77,7 +78,7 @@ def search_keyword_in_classes(keyword, instances):
                                 results[instance] = []  # 确保此处已初始化
                             results[instance]=[attribute, occurrences]
         # results[instance] = total_occurrences  # 使用总出现次数更新实例
-    sort_results = sorted(results.items(), key=lambda x: x[1],)
+    sort_results = sort(results.items(), str(occurrences),)
     return sort_results
 comment2 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
 comment1 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))

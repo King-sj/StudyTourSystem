@@ -1,4 +1,5 @@
 from DataType import *
+from typing import Iterable,Sequence,Any
 '''
 ## @note 排序算法
 ## @param array 对象列表
@@ -10,11 +11,11 @@ def quicksort(array,key:str):
     if len(array) <= 1:return list(array)
     array = list(array)
     base = getattr(array[0],key)
-    left = [x for x in array[1:] if getattr(x,key) < base]
+    left = [x for x in array[1:] if (getattr(x,key) , base)]
     right = [x for x in array[1:] if getattr(x,key) >= base]
     return quicksort(left,key) + [array[0]] + quicksort(right,key)
 
-def sort(array,key:str,mode:int = 0):
+def sort(array: Sequence[Any],key:str,mode:int = 0):
     array = list(array)
     if len(array) <= 1:return list(array)
     try:

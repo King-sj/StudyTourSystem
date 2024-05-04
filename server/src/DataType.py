@@ -51,7 +51,7 @@ class Comment:
         self.commentText = text
         self.commentScore = score
         self.commentTime = time
-    
+
 '''
 @brief 日记类
 @param journal_name 日记名称
@@ -103,7 +103,7 @@ class Road:
         return False
     def __hash__(self):
         return hash((self.start, self.destination, self.length, self.crowd, self.type))
-        
+
 
 '''
 @param building_group 建筑组
@@ -130,7 +130,7 @@ class Area:
         for value in self.road_group.values():
             total += len(value)
         return total / len(self.building_group)
-    
+
     def add_building(self,building):
         building.building_id = len(self.building_group) + 1 + self.area_id
         self.building_group[building.building_id] = building
@@ -149,5 +149,5 @@ class Area:
         if id not in self.building_group.keys():
             raise AttributeError('AttributeError:building is not exist')
         return self.building_group[id]
-    
+
     def __hash__(self):return self.area_id

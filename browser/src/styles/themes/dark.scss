@@ -1,0 +1,8 @@
+@import 'basic/variable.scss';
+:root[data-theme='dark'] {
+  @include basic-variable();
+  --color-background: linear-gradient(135deg, #292a3a, #536976);
+  --color-text: #ffffff;
+  --color-rich-text:liner-gradient(135deg, #292a3a, #536976);
+  // 其他暗主题样式变量
+}

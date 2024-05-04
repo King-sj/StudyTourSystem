@@ -20,6 +20,9 @@ import BaiduMap from 'vue-baidu-map-3x';
 
 import './styles/index.scss'
 
+import {toggleTheme} from "@/styles/setting.ts"
+toggleTheme(null)
+
 const app = createApp(App)
 
 app.use(createPinia())

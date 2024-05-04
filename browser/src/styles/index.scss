@@ -1,3 +1,5 @@
+@import 'themes/light';
+@import 'themes/dark';
 *{
   padding: 0px;
   margin: 0px;
@@ -15,5 +17,4 @@
 }
 #app{
   overflow: scroll;
-  background-color: red;
 }

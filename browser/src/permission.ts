@@ -1,26 +1,20 @@
 import router from "@/router/index";
-import { useStorage, useTimestamp } from '@vueuse/core'
 import { ElMessageBox } from 'element-plus'
-import { useUserStore } from "./stores/user";
-/**
- * 判断路径是否是（不同端）的首页，是则返回true
- *  @param[path] 待判断路径
- */
-function isHomePage(path: string): boolean {
-  var homePages: string[] = ["/", "/home"];
-  return homePages.some(value => value === path);
+import { useUserStore } from "@/components/LoginSystem";
+const noNeedLogin = (name: String | undefined):boolean=>{
+  const pages : String[] = ["login", "signUp", "setting"]
+  return name ? pages.includes(name) : false
 }
-
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  const userData = userStore.userData;
-  console.log("user storage:" , userData ,from,to)
-  // user.value = null
-  // 登录检查
-  if (!userData && to.name != "login") {
-    ElMessageBox.alert('Please login')
-    next('/login');
+  // userStore.logout()
+  const user = userStore.userStorage;
+  console.log('user storage',user, user.email, user.password, user.expiration)
+  if (userStore.isExpired() && !noNeedLogin(to.name?.toString())) {
+    ElMessageBox.alert('登录过期，请重新登录').then(() => {
+      next('/login')
+    })
   } else {
     next();
   }
-});
+})

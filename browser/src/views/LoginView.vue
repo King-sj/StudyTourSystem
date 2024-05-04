@@ -1,48 +1,50 @@
 <script lang="ts" setup>
-import { defineComponent, ref } from 'vue';
-import axios from 'axios';
+import type { Ref } from 'vue';
+import { ref } from 'vue';
+import { User, useUserStore } from '@/components/LoginSystem'
 import { useRouter } from 'vue-router';
-import { useStorage,useTimestamp } from '@vueuse/core'
-import { useUserStore } from '@/stores/user';
-
-const username = ref('');
-const password = ref('');
-const router = useRouter();
-const userStore = useUserStore()
+const router = useRouter()
+const email: Ref<string> = ref('')
+const psw: Ref<string> = ref('')
 const login = async () => {
-  try {
-    // const { data } = await axios.post('http://localhost:5000/login', {
-    //   username: username.value,
-    //   password: password.value,
-    // });
-
-    // check
-    userStore.update({
-      name:username.value,
-      lastLoginTimeStamp:useTimestamp().value
-    })
-
+  const succ = await useUserStore().login(
+    new User(email.value, psw.value)
+  )
+  if (succ) {
     router.push({name:"home"})
-  } catch (error) {
-    console.error(error);
-    alert('Login failed!');
   }
-};
+}
+const signUp = ()=>{
+  router.push({ name : "signUp" })
+}
 </script>
 
 <template>
-  <div>
-    <h1>Login</h1>
-    <form @submit.prevent="login">
-      <div>
-        <label for="username">Username:</label>
-        <input v-model="username" type="text" id="username" required>
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input v-model="password" type="password" id="password" required>
-      </div>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <main>
+    <n-space vertical>
+      <n-input v-model:value="email" type="text" placeholder="please input email" :maxlength="32" />
+      <n-input v-model:value="psw" type="password" show-password-on="mousedown" placeholder="please input password"
+        :maxlength="16" />
+      <n-space>
+        <n-button @click="login">登录</n-button>
+        <n-button @click="signUp">注册</n-button>
+      </n-space>
+    </n-space>
+  </main>
 </template>
+
+<style lang="scss" scoped>
+.n-space {
+  display: flex;
+  font-size: 1rem;
+  .n-input {
+    width: 50%;
+    margin: 0;
+  }
+
+  .n-button {
+    margin: 0;
+    // color: var(--color-text);
+  }
+}
+</style>

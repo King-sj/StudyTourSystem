@@ -37,6 +37,13 @@ router.push({ name: "home" })
             Admin
           </n-button>
           <n-divider />
+
+          <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
+          @click="router.push({name:'setting'})"
+        >
+          Settings
+        </n-button>
+        <n-divider />
         </n-flex>
       </n-layout-sider>
 
@@ -51,5 +58,9 @@ router.push({ name: "home" })
 .n-button{
   margin: 0;
   padding: 0;
+}
+*{
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 </style>

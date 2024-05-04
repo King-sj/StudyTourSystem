@@ -1,0 +1,5 @@
+@import './utils.scss';
+@mixin basic-variable($scale: 1) {
+  $--unit: 'rem'; // 这是一个 Sass 变量，而不是 CSS 自定义属性
+  --font-size: #{font-size($scale, $--unit)}; // 使用 fs 函数并传递 $scale 和 $unit
+}

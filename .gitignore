@@ -197,3 +197,5 @@ cython_debug/
 *.pyc
 
 test
+.VSCodeCounter
+temp

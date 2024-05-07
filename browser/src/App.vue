@@ -12,6 +12,7 @@ router.push({ name: "home" })
     <n-layout embedded has-sider style="height:100%;width: 100vw;">
       <n-layout-sider collapse-mode="transform" :native-scrollbar="true" show-trigger="bar"
         content-style="padding: 0px;" :inverted="true" :show-collapsed-content="false" :default-collapsed="true"
+        :collapsed-width="1"
         bordered>
         <n-flex vertical style="height:100%">
           <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"

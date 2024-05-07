@@ -1,11 +1,10 @@
 import {defineStore} from 'pinia'
 import axios from 'axios';
 import {User} from './User'
-import {SERVER,PORT} from "@/configs"
+import {serverConfig} from "@/configs"
 export const useApiServer = defineStore("loginSystemApiServer",()=>{
-  // const server:string = 'http://127.0.0.1:2004/';
   const axiosInst = axios.create({
-    baseURL: SERVER+":"+ PORT + '/loginSystem/',
+    baseURL: serverConfig.SERVER+":"+ serverConfig.PORT + '/loginSystem/',
     timeout: 1000,
     headers: { 'X-Custom-Header': 'foobar' }
   })

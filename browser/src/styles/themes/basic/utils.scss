@@ -1,0 +1,3 @@
+@function font-size($scale: 1, $unit: 'rem') {
+  @return #{$scale * 2} + $unit; // 计算值并返回字符串
+}

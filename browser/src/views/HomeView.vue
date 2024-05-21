@@ -1,32 +1,53 @@
 <script setup lang="ts">
 import MapChart from '@/components/MapChart.vue';
 import AreaList from '@/components/AreaList.vue'
-import { ref, watch, type Ref } from 'vue';
+import { ref, watch, type Ref, computed} from 'vue';
 import { type ICoord } from '@/types';
-const selectArea = ref()
+import { useApiStore } from '@/apis/useApiStore';
+const server = useApiStore()
+
+const selectArea:Ref<any> = ref({name:""})
+const dest = ref({ lng: 116.364594, lat: 39.96725 } as ICoord);
 const center = ref({ lng: 116.364594, lat: 39.96725 } as ICoord);
+const location = ref({ lng: 116.364594, lat: 39.96725 } as ICoord);
+const polygonPath = ref([location.value,dest.value])
 watch(() => selectArea.value, (v) => {
-  console.log("select change")
+  console.log("select change", selectArea.value)
   if (selectArea.value) {
+    dest.value.lng = selectArea.value.lng
+    dest.value.lat = selectArea.value.lat
     center.value.lng = selectArea.value.lng
     center.value.lat = selectArea.value.lat
+
+    polygonPath.value = [
+      location.value,
+      dest.value
+    ]
+    console.log("path", polygonPath.value, location.value, dest.value)
   }
 })
-
+const beginTour = async ()=>{
+  const res = await server.get_routes(selectArea.value.name)
+  console.log("routes", res)
+}
 </script>
 <template>
   <main style="width: 100%;height: 100%;">
     <AreaList class="area-list" v-model:select-area="selectArea"></AreaList>
-    <MapChart v-if="true" v-model:center="center" class="map"></MapChart>
-    <n-space center>
-      <el-button type='primary'>Begin Tour</el-button>
+    <MapChart
+      :key="selectArea.name"
+      v-model:dest="dest" v-model:center="center"
+      v-model:location="location" v-model:polygon-path="polygonPath"
+      class="map"></MapChart>
+    <n-space dest>
+      <el-button type='primary' @click="beginTour()">Begin Tour</el-button>
     </n-space>
   </main>
 </template>
 
 <style lang="scss" scoped>
 .area-list {
-  min-height: 10vh;
+  min-height: 10%;
 }
 
 .map {

@@ -12,8 +12,16 @@ export const useApiStore = defineStore('apiStore', () => {
     headers: { 'X-Custom-Header': 'foobar' }
   })
   async function get_all_scop() {
-    const res = await server.post('get_all_scop')
+    const res = await server.post('get_all_scop',{},{
+      timeout:30000
+    })
     return res
   }
-  return {get_all_scop}
+  async function get_routes(area:string) {
+    const res = await server.post("get_routes", {
+      area:area
+    })
+    return res
+  }
+  return {get_all_scop, get_routes}
 })

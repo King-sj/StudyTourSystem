@@ -21,12 +21,15 @@ class Scop:
     self.lng = lng
 
     self.buildings: List[Scop] = []
+    self.routes: List = []
 
   def add_building(self, name, lat: float, lng: float):
     self.buildings.append(Scop(name, lat, lng))
 
-  def add_route(self):
-    pass
+  def add_route(self, origin: str, dest: str, routes):
+    routes["origin"] = origin
+    routes["dest"] = dest
+    self.routes.append(routes)
 
   async def save(self):
     await Scop_Manager.insert_record(self)
@@ -39,6 +42,7 @@ class Scop:
     scop = Scop(data['name'], data['lat'], data['lng'])
     for building_data in data.get('buildings', []):
       scop.buildings.append(Scop.from_dict(building_data))
+    scop.routes = data["routes"]
     return scop
 
   @staticmethod
@@ -54,7 +58,8 @@ class Scop:
         'name': self.name,
         'lat': self.lat,
         'lng': self.lng,
-        'buildings': [building.to_dict() for building in self.buildings]
+        'buildings': [building.to_dict() for building in self.buildings],
+        "routes": self.routes
     }
 
 

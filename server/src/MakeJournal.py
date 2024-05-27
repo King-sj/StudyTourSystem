@@ -1,7 +1,6 @@
 from DataType import Journal, Comment
 import time
 
-
 class JournalManagementSystem:
     def __init__(self):
         self.journals = []

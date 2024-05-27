@@ -78,7 +78,7 @@ def search_keyword_in_classes(keyword, instances):
                 results[instance] = []  # 确保此处已初始化
               results[instance] = [attribute, occurrences]
     # results[instance] = total_occurrences  # 使用总出现次数更新实例
-  sort_results = sort(results.items(), str(occurrences),)
+  sort_results = sort(results.items(), str(occurrences), 0)
   return sort_results
 
 
@@ -87,7 +87,7 @@ comment1 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
 comment3 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
 comment4 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
 comment5 = Comment("Bob", ["Not as expected"], 2, time.localtime(time.time()))
-journal2 = journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {
+journal2 = Journal("Weekend Getaway", 3.0, ["Short trip", "Okayish experience"], {
                    comment1, comment3, comment4, comment5, comment2}, time.localtime(time.time()))
 keyword_results = dict(search_keyword_in_classes(
     "Not", [comment1, comment3, comment4, comment5, comment2, journal2]))

@@ -17,7 +17,6 @@ import 'element-plus/dist/index.css'
 // import BaiduMapOffline from 'vue-baidu-map-offline';
 import BaiduMap from 'vue-baidu-map-3x';
 
-
 import './styles/index.scss'
 
 import {toggleTheme} from "@/styles/setting"

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, type Ref } from 'vue';
+import { ref, computed, onMounted, type Ref, watch } from 'vue';
 import { useApiStore } from '@/apis/useApiStore';
 const selectArea: any = defineModel<any>('selectArea')
 
@@ -7,9 +7,10 @@ const api = useApiStore()
 
 const loading = ref(false)
 var areas: Ref<any[]> = ref([])
-const noMore = computed(() => areas.value.length > 0)
-
+const noMore = computed(() => areas.value.length > 100)
+const options:Ref<any[]> = ref([]);
 const handleLoad = async () => {
+  console.log("begin load area data")
   if (noMore.value || loading.value) return
 
   loading.value = true
@@ -18,51 +19,32 @@ const handleLoad = async () => {
   res.data.forEach((ele: any) => {
     areas.value.push(ele)
   });
-  console.log(areas)
+  console.log("areas", areas.value)
+
+  areas.value.forEach((ele,idx)=>{
+    options.value.push(
+      {
+        label: ele.name,
+        value: idx,
+      }
+    )
+  })
   loading.value = false
 }
 handleLoad()
-
+const val =  ref(null)
+watch(() => val.value, () => {
+  console.log("select area change", val.value)
+  if(val.value != null)
+    selectArea.value = areas.value[val.value]
+})
 </script>
 <template>
   <main>
-    <ul v-infinite-scroll="handleLoad" class="infinite-list" style="overflow: auto">
-      <li v-for="area in areas" :key="area.name" class="infinite-list-item" @click="selectArea = area"
-        :class="{ 'selected': area == selectArea }">
-        {{ area.name }}
-      </li>
-      <div v-if="loading" class="text">
-        加载中...
-      </div>
-      <div v-if="noMore" class="text">
-        没有更多了 🤪
-      </div>
-    </ul>
+    <n-space vertical>
+      <n-select v-model:value="val" :options="options" />
+    </n-space>
   </main>
 </template>
 <style lang="scss" scoped>
-.infinite-list {
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-
-  .infinite-list-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    background: var(--el-color-primary-light-9);
-    margin: 1px;
-    color: var(--el-color-primary);
-  }
-
-  .infinite-list-item:hover {
-    background-color: greenyellow;
-  }
-
-  .selected {
-    color: red;
-  }
-}
 </style>

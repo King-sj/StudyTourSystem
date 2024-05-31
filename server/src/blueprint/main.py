@@ -28,6 +28,8 @@ async def get_routes():
   if not data:
     return "req is null", 402
   area_name = data["area"]
+  token = data["token"]
+  #TODO(SJ) 根据 token获取 account
   # 创建一个Area对象
   area = Area(dict(), dict(), set(), 0, 0)
   json_data = await Scop_Manager.get_scop(area_name)

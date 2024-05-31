@@ -76,17 +76,23 @@ async def login(account: str, psw: str) -> tuple[bool, str]:
   # 验证密码
   if res["password"] != hashlib.sha256(psw.encode('utf-8')).hexdigest():
     return (False, "密码错误")
-  return (True, await generate_token())
+  return (True, await generate_token(account))
 
 
-async def generate_token() -> str:
+async def generate_token(account:str) -> str:
   """生成token"""
+  redis_client =await link_redis()
+  # 判断是否存在token
+  token = await redis_client.get(account+"-token")
+  if token:
+    return token.decode('utf-8')
+  # 生成token
   letters = string.ascii_letters + string.digits
-  random_string = ''.join(random.choice(letters) for _ in range(32))
+  while True:
+    random_string = ''.join(random.choice(letters) for _ in range(32))
+    if (not await redis_client.exists(random_string)):
+      break
   """存储token到Redis, 设置0.5day过期"""
-
-  # TODO(SJ) 使用redis等存储token, 后续需要鉴权
-  # redis_client =await link_redis()
-  # await redis_client.setex(random_string, 60*60*12, '1')
-
+  await redis_client.setex(random_string, 60*60*12, account)
+  await redis_client.setex(account+"-token", 60*60*12, random_string)
   return random_string

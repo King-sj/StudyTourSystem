@@ -15,8 +15,8 @@ async def getCaptcha():
   # TODO(SJ) add email check
   print("captcha : ", email)
   captcha = await generate_captcha(email)
-  send_email(email, "CMPS", """
-      验证码为{}
+  send_email(email, "BUPT", """
+      您的验证码为{}
       """.format(captcha)
              )
   print('captcha:', captcha)

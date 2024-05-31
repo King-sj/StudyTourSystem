@@ -69,5 +69,5 @@ export const useUserStore = defineStore("user",()=>{
   const isExpired = ():boolean=>{
     return new Date().getTime() > userStorage.value.expiration;
   }
-  return {sendCaptcha, signUp, login, logout, isExpired, userStorage}
+  return {sendCaptcha, signUp, login, logout, isExpired, userStorage, token}
 })

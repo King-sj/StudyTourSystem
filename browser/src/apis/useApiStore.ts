@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import {serverConfig} from "@/configs"
+import { useUserStore } from '@/components/LoginSystem'
 export const useApiStore = defineStore('apiStore', () => {
   // const SERVER: string = 'http://127.0.0.1'
   // const SERVER: string = "http://101.42.8.164"
@@ -18,8 +19,10 @@ export const useApiStore = defineStore('apiStore', () => {
     return res
   }
   async function get_routes(area:string) {
+    const token = useUserStore().token
     const res = await server.post("get_routes", {
-      area:area
+      area:area,
+      token:token
     })
     return res
   }

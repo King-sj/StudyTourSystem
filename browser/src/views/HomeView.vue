@@ -3,7 +3,7 @@ import MapChart from '@/components/MapChart.vue';
 import AreaList from '@/components/AreaList.vue'
 import { ref, watch, type Ref, computed} from 'vue';
 import { useApiStore } from '@/apis/useApiStore';
-import {  type Point } from 'vue3-baidu-map-gl'
+import { type Point } from 'vue3-baidu-map-gl'
 
 const server = useApiStore()
 

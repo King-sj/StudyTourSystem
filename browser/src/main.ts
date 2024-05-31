@@ -15,7 +15,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 // import BaiduMapOffline from 'vue-baidu-map-offline';
-import BaiduMap from 'vue-baidu-map-3x';
+import baiduMap  from 'vue3-baidu-map-gl'
 
 import './styles/index.scss'
 
@@ -32,12 +32,16 @@ app.use(router)
 // app.use(BaiduMapOffline, {
 //   offline: true
 // });
-app.use(BaiduMap, {
-  // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
-  ak: baiduMapConfig.default.ak,
-  // v:'2.0',  // 默认使用3.0
-  // type: 'WebGL' // ||API 默认API  (使用此模式 BMap=BMapGL)
-});
+// app.use(BaiduMap, {
+//   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+//   ak: baiduMapConfig.default.ak,
+//   // v:'2.0',  // 默认使用3.0
+//   // type: 'WebGL' // ||API 默认API  (使用此模式 BMap=BMapGL)
+// });
+app.use(baiduMap,{
+  ak:baiduMapConfig.default.ak,
+  plugins: ['TrackAnimation']
+})
 
 app.use(naive)
 app.use(ElementPlus)

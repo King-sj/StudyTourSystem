@@ -27,7 +27,8 @@
     "vue-baidu-map-3x": "^1.0.37",
     "vue-baidu-map-offline": "^1.0.7",
     "vue-echarts": "^6.6.9",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue3-baidu-map-gl": "^2.3.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",

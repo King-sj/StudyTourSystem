@@ -7,7 +7,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
+    "types": ["vue3-baidu-map-gl/volar"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

@@ -1,9 +1,4 @@
-from configparser import ConfigParser
-# import aioredis.client
-# import pymysql
-import aiomysql
-# import redis
-# import aioredis
+import motor.motor_asyncio
 from redis import asyncio as aioredis
 import hashlib
 import random
@@ -16,20 +11,12 @@ async def link_redis():
   return redis_client
 
 
-async def link_mysql():
-  conifg = ConfigParser()
-  conifg.read('config/config.ini')
-  password_dir = conifg.get('mysql', 'password_dir')
-  secrete_config = ConfigParser()
-  secrete_config.read(password_dir)
-
-  psw = secrete_config.get('mysql', 'password')
-  # print(psw)
-  # 如果报错可能是因为密码错误，或者没启动mysql
-  connection = await aiomysql.connect(host='localhost', user='root', password=psw, db='CMPS',
-                                      autocommit=True)
-  del psw
-  return connection
+async def link_mongo():
+  client = motor.motor_asyncio.AsyncIOMotorClient(
+        'mongodb://localhost:27017/')
+  db = client['StudyTourSystem']
+  collection = db['users']
+  return collection
 
 
 async def generate_captcha(email: str, length: int = 6):
@@ -47,10 +34,8 @@ async def store_captcha(account, captcha):
 
 async def exist_user(account: str) -> bool:
   """判断用户是否存在"""
-  conn = await link_mysql()
-  cur = await conn.cursor()
-  await cur.execute("SELECT * FROM users WHERE account=%s", (account,))
-  res = await cur.fetchone()
+  collection = await link_mongo()
+  res = await collection.find_one({"account": account})
   return res is not None
 
 
@@ -64,7 +49,7 @@ async def verify_captcha(account: str, captcha: str) -> bool:
 
 
 async def register_account(account, password, captcha) -> tuple[bool, str]:
-  """注册账户，先检查验证码是否正确，然后存储账号和加密后的密码到MySQL"""
+  """注册账户，先检查验证码是否正确，然后存储账号和加密后的密码到MongoDB"""
   # 检查用户是否存在
   if await exist_user(account):
     return (False, "用户已存在")
@@ -74,29 +59,22 @@ async def register_account(account, password, captcha) -> tuple[bool, str]:
 
   # 加密密码
   hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-  conn = await link_mysql()
-  cursor = await conn.cursor()
-  # 存储到MySQL
-  try:
-    await cursor.execute("INSERT INTO users (account, password) VALUES (%s, %s)", (account, hashed_password))
-    await conn.commit()
-    cursor.close()
-    conn.close()
-    return (True, '')
-  except aiomysql.MySQLError as e:
-    return (False, "数据库错误: \n "+str(e))
+  collection = await link_mongo()
+  await collection.insert_one({
+    "account":account,
+    "password":hashed_password
+  })
+  return (True, '')
 
 
 async def login(account: str, psw: str) -> tuple[bool, str]:
   """登录"""
-  conn = await link_mysql()
-  cur = await conn.cursor()
-  await cur.execute("SELECT * FROM users WHERE account=%s", (account,))
-  res = await cur.fetchone()
+  collection = await link_mongo()
+  res = await collection.find_one({"account":account})
   if res is None:
     return (False, "用户不存在")
   # 验证密码
-  if res[1] != hashlib.sha256(psw.encode('utf-8')).hexdigest():
+  if res["password"] != hashlib.sha256(psw.encode('utf-8')).hexdigest():
     return (False, "密码错误")
   return (True, await generate_token())
 

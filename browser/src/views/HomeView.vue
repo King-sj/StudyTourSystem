@@ -2,15 +2,16 @@
 import MapChart from '@/components/MapChart.vue';
 import AreaList from '@/components/AreaList.vue'
 import { ref, watch, type Ref, computed} from 'vue';
-import { type ICoord } from '@/types';
 import { useApiStore } from '@/apis/useApiStore';
+import {  type Point } from 'vue3-baidu-map-gl'
+
 const server = useApiStore()
 
 const selectArea:Ref<any> = ref({name:""})
-const dest = ref({ lng: 116.364594, lat: 39.96725 } as ICoord);
-const center = ref({ lng: 116.364594, lat: 39.96725 } as ICoord);
-const location = ref({ lng: 116.364594, lat: 39.96725 } as ICoord);
-const polygonPath = ref([location.value,dest.value])
+
+const dest = ref({ lng: 116.364594, lat: 39.96725 } as Point);
+const center = ref({ lng: 116.364594, lat: 39.96725 } as Point);
+const polygonPath = ref([dest.value])
 watch(() => selectArea.value, (v) => {
   console.log("select change", selectArea.value)
   if (selectArea.value) {
@@ -20,10 +21,8 @@ watch(() => selectArea.value, (v) => {
     center.value.lat = selectArea.value.lat
 
     polygonPath.value = [
-      location.value,
       dest.value
     ]
-    console.log("path", polygonPath.value, location.value, dest.value)
   }
 })
 const beginTour = async ()=>{
@@ -36,8 +35,9 @@ const beginTour = async ()=>{
     <AreaList class="area-list" v-model:select-area="selectArea"></AreaList>
     <MapChart
       :key="selectArea.name"
-      v-model:dest="dest" v-model:center="center"
-      v-model:location="location" v-model:polygon-path="polygonPath"
+      v-model:dest="dest"
+      v-model:center="center"
+      v-model:polygon-path="polygonPath"
       class="map"></MapChart>
     <n-space dest>
       <el-button type='primary' @click="beginTour()">Begin Tour</el-button>

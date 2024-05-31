@@ -19,7 +19,6 @@ class Scop:
     self.name = name
     self.lat = lat
     self.lng = lng
-
     self.buildings: List[Scop] = []
     self.routes: List = []
 
@@ -55,11 +54,11 @@ class Scop:
 
   def to_dict(self):
     return {
-        'name': self.name,
-        'lat': self.lat,
-        'lng': self.lng,
-        'buildings': [building.to_dict() for building in self.buildings],
-        "routes": self.routes
+      'name': self.name,
+      'lat': self.lat,
+      'lng': self.lng,
+      'buildings': [building.to_dict() for building in self.buildings],
+      "routes": self.routes
     }
 
 

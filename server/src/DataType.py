@@ -10,20 +10,25 @@ Location = Tuple[float,float]
 Function = Set[str]
 Name = str
 Text = List[str]
-
-'''
-@brief 建筑类
-@param building_id 建筑 ID
-@param building_location 位置
-@param building_name 名称
-@param building_function 功能
-'''
 class Building:
+    '''
+    @brief 建筑类
+    @param building_id 建筑 ID
+    @param building_location 位置
+    @param building_name 名称
+    @param building_function 功能
+    '''
     building_id:int = 0x0000000000000000
     building_location:Location = tuple()
     building_name:Name = ""
     building_function:Function = set()
     def __init__(self,location,function,name,id=0):
+        '''
+        @param id 建筑 ID
+        @param location 位置
+        @param name 名称
+        @param function 功能
+        '''
         self.building_location = location
         self.building_name = name
         self.building_function = function

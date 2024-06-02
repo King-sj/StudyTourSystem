@@ -5,7 +5,7 @@ import {serverConfig} from "@/configs"
 export const useApiServer = defineStore("loginSystemApiServer",()=>{
   const axiosInst = axios.create({
     baseURL: serverConfig.SERVER+":"+ serverConfig.PORT + '/loginSystem/',
-    timeout: 1000,
+    timeout: 10000,
     headers: { 'X-Custom-Header': 'foobar' }
   })
   function sendCaptcha(email:string) {

@@ -96,3 +96,16 @@ async def generate_token(account:str) -> str:
   await redis_client.setex(random_string, 60*60*12, account)
   await redis_client.setex(account+"-token", 60*60*12, random_string)
   return random_string
+
+async def test():
+  redis_client = await link_redis()
+  keys = await redis_client.keys("*")
+  for key in keys:
+    print(key)
+  res = await login("2175616761@qq.com","12345678")
+  print(res)
+  pass
+
+if __name__ == "__main__":
+  import asyncio
+  asyncio.run(test())

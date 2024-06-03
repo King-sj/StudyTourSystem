@@ -53,16 +53,14 @@ const syncCenterAndZoom = (e: any) => {
 <template>
   <main>
     <div class="state" v-if="!isLoading && !isError">
-      <h5>定位:</h5>
       <span>
         城市 - {{ location.address?.province }}-{{ location.address?.city }}-{{ location.address?.district }}-{{
           location.address?.street
         }}
       </span>
-      <span>纬度 - {{ location.point?.lat }}</span>
-      <span>经度 - {{ location.point?.lng }}</span>
-      <br />
-      <span>定位精度 - {{ location.accuracy }}m</span>
+      <span>纬度 : {{ location.point?.lat }}</span>
+      <span>经度 : {{ location.point?.lng }}</span>
+      <span>定位精度 : {{ location.accuracy }}m</span>
     </div>
     <div class="state" v-else-if="isError">出错了，{{ status }}</div>
     <div class="state" v-else>定位中...</div>
@@ -85,11 +83,11 @@ const syncCenterAndZoom = (e: any) => {
       strokeStyle="dashed"
     />
       <!-- 目标景区中心的位置 -->
-      <BMarker icon="end" :position="dest">
-      </BMarker>
+      <BMarker icon="simple_blue" :position="
+        polygonPath?.at(polygonPath.length-1) || dest
+      "></BMarker>
       <BMarker :position="location.point || {}" icon="start">
       </BMarker>
-      <BCityList />
       <BNavigation3d />
       <BLocation />
       <template #loading>

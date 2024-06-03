@@ -49,6 +49,11 @@ const router = createRouter({
       path:"/touring",
       name:"touring",
       component:()=>import("../views/TouringView.vue")
+    },
+    {
+      path:"/grade",
+      name:"grade",
+      component:()=>import("../views/GradeView.vue")
     }
   ]
 })

@@ -11,6 +11,5 @@ app.register_blueprint(data_server, url_prefix='/resource')
 def index():
   return "Welcome"
 
-
 if __name__ == '__main__':
   app.run(debug=True, port=2004, host='0.0.0.0')

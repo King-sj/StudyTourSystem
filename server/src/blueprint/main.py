@@ -17,33 +17,26 @@ async def get_all_scop():
   res = await Scop_Manager.get_all()
   for scop in res:
     del scop['_id']
-  print(res)
   return res
 
 
-@main_blueprint.route('/ ', methods=["POST", "GET"])
+@main_blueprint.route('/get_routes', methods=["POST", "GET"])
 async def get_routes():
   data = request.json
   print(data)
   if not data:
     return "req is null", 402
   area_name = data["area"]
+  origin = data["origin"]
+  dest = data["dest"]
   token = data["token"]
   #TODO(SJ) 根据 token获取 account
-  # 创建一个Area对象
-  area = Area(dict(), dict(), set(), 0, 0)
-  json_data = await Scop_Manager.get_scop(area_name)
-  print(json_data)
-  # 创建10个Building对象
-  buildings = {i: Building((0, 0), set(), str(i)) for i in range(1, 11)}
+  path = await Scop_Manager.get_scop_min_path(area_name,origin,dest)
+  return path
 
-  # 创建10条Road对象，每条Road的起点和终点都是一个Building
-  roads = {i: Road('road', i, (i % 10) + 1, i, 0) for i in range(1, 11)}
-
-  for b in buildings.values():
-    area.add_building(b)
-  for r in roads.values():
-    area.add_road(r)
-  result = get_shortest_road(area, 1, 10)
-  assert result[0] == 10 and result[1][10] == 1
-  return ""
+@main_blueprint.route('/get_hot_scop', methods=["POST","GET"])
+async def get_hot_scop():
+  res = await Scop_Manager.get_hot_scop()
+  for scop in res:
+    del scop['_id'] # Note: 不能带有 "_id" 字段
+  return res

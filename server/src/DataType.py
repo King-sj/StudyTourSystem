@@ -136,8 +136,8 @@ class Area:
             total += len(value)
         return total / len(self.building_group)
 
-    def add_building(self,building):
-        building.building_id = len(self.building_group) + 1 + self.area_id
+    def add_building(self,building:Building):
+        building.building_id = building.building_id
         self.building_group[building.building_id] = building
 
     def add_road(self,road:Road):
@@ -148,7 +148,9 @@ class Area:
         if road.destination not in self.road_group.keys():
             self.road_group[road.destination] = set()
         self.road_group[road.start].add(road)
-        self.road_group[road.destination].add(Road(road.type,road.destination,road.start,road.length,road.crowd))
+        self.road_group[road.destination].add(
+          Road(road.type,road.destination,road.start,road.length,road.crowd
+        ))
 
     def get_building(self,id):
         if id not in self.building_group.keys():

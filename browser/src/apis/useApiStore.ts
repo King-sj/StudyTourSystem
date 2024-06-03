@@ -9,7 +9,7 @@ export const useApiStore = defineStore('apiStore', () => {
   // const PORT: String = '2004'
   const server = axios.create({
     baseURL: serverConfig.SERVER + ':' + serverConfig.PORT + '/api/',
-    timeout: 1000,
+    timeout: 10000,
     headers: { 'X-Custom-Header': 'foobar' }
   })
   async function get_all_scop() {
@@ -18,13 +18,19 @@ export const useApiStore = defineStore('apiStore', () => {
     })
     return res
   }
-  async function get_routes(area:string) {
+  async function get_routes(area:string,origin:string,dest:string) {
     const token = useUserStore().token
     const res = await server.post("get_routes", {
       area:area,
+      origin:origin,
+      dest:dest,
       token:token
     })
     return res
   }
-  return {get_all_scop, get_routes}
+  async function get_hot_scop() {
+    const res = await server.get("get_hot_scop")
+    return res
+  }
+  return {get_all_scop, get_routes, get_hot_scop}
 })

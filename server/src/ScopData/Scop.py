@@ -203,9 +203,39 @@ class Scop_Manager:
       },
       upsert=True
     )
+    score_doc = await db['score'].find_one({"name":name})
+    if score_doc:
+      new_score = (score_doc["score"]*score_doc['visited_person'] + score)/(score_doc['visited_person']+1)
+      await db['score'].update_one({"name":name},
+        {
+          "$inc": {"visited_person": 1},
+          "$set": {"score": new_score}
+        }
+      )
+    else:
+      print("score_doc is null", name)
+      await db['score'].insert_one({
+        "name":name,
+        "score":score,
+        "visited_person":1
+      })
     await redis_client.aclose()
     return True
 
+  @staticmethod
+  async def get_history(token:str):
+    db = await Scop_Manager.link_database()
+    collection = db['jour']
+    redis_client = await aioredis.from_url('redis://localhost')
+    user = await redis_client.get(token)
+    if not user:
+      await redis_client.aclose()
+      return False,"redis is closed"
+    docs = await collection.find_one({"user":user.decode('utf-8')})
+    if not docs:
+      await redis_client.aclose()
+      return False,"can not find docs"
+    return True,docs["jour"]
 if __name__ == "__main__":
   import asyncio
 

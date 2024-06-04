@@ -60,8 +60,15 @@ export const useApiStore = defineStore('apiStore', () => {
     })
     return res
   }
+  async function get_history() {
+    const token = useUserStore().userStorage.token
+    const res = await server.post("get_history",{
+      token:token
+    })
+    return res
+  }
   return {
     get_all_scop, get_routes, get_hot_scop,
-    get_scops_info, upLoadJour
+    get_scops_info, upLoadJour, get_history
   }
 })

@@ -54,6 +54,11 @@ const router = createRouter({
       path:"/grade",
       name:"grade",
       component:()=>import("../views/GradeView.vue")
+    },
+    {
+      path:"/history",
+      name:"history",
+      component:()=>import("../views/HistoryView.vue")
     }
   ]
 })

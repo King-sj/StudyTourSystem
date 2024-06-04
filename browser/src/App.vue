@@ -19,7 +19,12 @@ router.push({ name: "home" })
             @click="router.push({ name: 'home' })">
             Home
           </n-button>
+          <n-divider />
 
+          <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
+            @click="router.push({ name: 'history' })">
+            History
+          </n-button>
           <n-divider />
 
           <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
@@ -33,12 +38,6 @@ router.push({ name: "home" })
             Help
           </n-button>
           <n-divider />
-          <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
-            @click="router.push({ name: 'admin' })">
-            Admin
-          </n-button>
-          <n-divider />
-
           <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
           @click="router.push({name:'setting'})"
         >

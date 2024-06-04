@@ -29,7 +29,7 @@ async def get_routes():
   area_name = data["area"]
   origin = data["origin"]
   dest = data["dest"]
-  token = data["token"]
+  # token = data["token"]
   #TODO(SJ) 根据 token获取 account
   path = await Scop_Manager.get_scop_min_path(area_name,origin,dest)
   return path
@@ -77,3 +77,18 @@ async def upLoadJour():
       "status":False,
       "msg": "upload jour failed"
     })
+
+@main_blueprint.route('/get_history', methods=["POST","GET"])
+async def get_history():
+  data = request.json
+  if not data:
+    return jsonify({
+      "status":False,
+      "msg": "req is null"
+    })
+  token = data["token"]
+  suc,res = await Scop_Manager.get_history(token)
+  return jsonify({
+    "status":suc,
+    "res": res
+  })

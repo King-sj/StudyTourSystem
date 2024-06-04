@@ -162,6 +162,7 @@ const endTour = ()=>{
       :key_nodes="keyNode"
       class="map">
     </MapChart>
+    <el-avatar :size="50" src="@/assets/AI.png" />
   </main>
   <footer>
     <el-button type="primary" @click="endTour">

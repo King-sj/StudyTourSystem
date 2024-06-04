@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch, nextTick, computed } from "vue";
+import { type Ref,ref, reactive, onMounted, watch, nextTick, computed } from "vue";
 import axios from "axios";
 import {
   BMap, BNavigation3d, BCityList, BLocation,
@@ -7,12 +7,19 @@ import {
 } from 'vue3-baidu-map-gl'
 import { type MapType, type MapProps, type Point,
 } from 'vue3-baidu-map-gl'
-
+import { useApiStore } from "@/apis/useApiStore";
+const props = defineProps<{
+  key_nodes: Point[]
+}>()
 const dest = defineModel<Point>("dest", {
   default:{lat:0,lng:0}
 });
 const center = defineModel<Point>("center")
 const polygonPath = defineModel<Point[]>("polygonPath")
+const baiduPlanPath:Ref<Point[]> = ref([])
+
+const server = useApiStore()
+
 const type = ref<MapType>('BMAP_NORMAL_MAP')
 const mapStyles = new Map<string, string>(
   [
@@ -31,9 +38,29 @@ const { get, location, isLoading, isError, status } = useBrowserLocation({
   map.value.resetCenter()
 })
 
-watch(()=>location.value,()=>{
+watch(()=>location.value,async()=>{
   console.log("location change", location.value)
   center.value = location.value?.point;
+  if(location.value?.point) {
+    const res = await server.get_routes_by_baidu(
+      location.value.point.lat,location.value.point.lng,
+      dest.value.lat,dest.value.lng
+    )
+    const paths = res.data.step
+    console.log("baidu plan",res)
+    baiduPlanPath.value = []
+    paths.forEach((path:string)=>{
+      var locations = path.split(';')
+      locations.forEach((loc:string)=>{
+        var location = loc.split(',')
+        baiduPlanPath.value.push({
+          lng: Number(location[0]),
+          lat: Number(location[1])
+        })
+      })
+    })
+  }
+
 })
 
 
@@ -47,6 +74,7 @@ const syncCenterAndZoom = (e: any) => {
     }
   })
 };
+
 
 
 </script>
@@ -75,7 +103,7 @@ const syncCenterAndZoom = (e: any) => {
       :mapStyleId="mapStyle"
     >
     <BPolyline
-      :path="[location.point || {},...polygonPath]"
+      :path="[...baiduPlanPath,location.point || {},...polygonPath]"
       stroke-color="#0ff"
       :stroke-opacity="1"
       :stroke-weight="8"
@@ -83,11 +111,12 @@ const syncCenterAndZoom = (e: any) => {
       strokeStyle="dashed"
     />
       <!-- 目标景区中心的位置 -->
-      <BMarker icon="simple_blue" :position="
+      <BMarker icon="end" :position="
         polygonPath?.at(polygonPath.length-1) || dest
-      "></BMarker>
+      " v-if="props.key_nodes.length==0"></BMarker>
       <BMarker :position="location.point || {}" icon="start">
       </BMarker>
+      <BMarker :position="loc" v-for="loc in props.key_nodes" icon="simple_blue"></BMarker>
       <BNavigation3d />
       <BLocation />
       <template #loading>

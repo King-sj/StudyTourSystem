@@ -21,7 +21,7 @@ watch(theme,
 )
 </script>
 <template>
-  <main>
+  <main style="text-align: center;">
     <div>
     <el-select
       v-model="theme"

@@ -102,7 +102,12 @@ class Scop_Manager:
     res = []
     async for doc in collection.find(query):
       del doc['_id']
+      score_doc = await db["score"].find_one({"name":doc["name"]})
+      if (score_doc):
+        doc["score"] = score_doc['score']
+        doc["visited_person"] = score_doc['visited_person']
       res.append(doc)
+    # print("get_scops", query , res)
     return res
 
   @staticmethod
@@ -132,7 +137,7 @@ class Scop_Manager:
     data = await Scop_Manager.get_scop(name)
     if(not data):
       print("no data")
-      return ""
+      return "",""
     scop = Scop.from_dict(data)
     # 名字到编号的映射
     n2i = {scop.buildings[i].name:i+1 for i in range(0, len(scop.buildings))}
@@ -158,6 +163,13 @@ class Scop_Manager:
 
     dist, route_order = get_shortest_road(area,n2i[origin],n2i[dest])
     path = ""
+    key_node = ""
+    for idx in route_order:
+      for building in data.get("buildings", []):
+        if building["name"] == i2n[idx]:
+          key_node += str(building['lng'])+","+str(building['lat'])+";"
+          break
+
     for i in range(1, len(route_order)):
       res = [
         route for route in scop.routes
@@ -165,13 +177,13 @@ class Scop_Manager:
       ][0]
       for step in res["step"]:
         path += step["path"]+";"
-    return path
+    return path,key_node
 
   @staticmethod
   async def get_hot_scop():
     db = await Scop_Manager.link_database()
     collection = db['score']
-    cursor = collection.find({}).sort([("score", -1), ("visited_person", -1)]).limit(50)
+    cursor = collection.find({}).sort([("score", -1), ("visited_person", -1)]).limit(51)
     res = []
     async for doc in cursor:
       res.append(doc)
@@ -217,7 +229,9 @@ class Scop_Manager:
       await db['score'].insert_one({
         "name":name,
         "score":score,
-        "visited_person":1
+        "visited_person":1,
+        "province":province,
+        "city":city
       })
     await redis_client.aclose()
     return True

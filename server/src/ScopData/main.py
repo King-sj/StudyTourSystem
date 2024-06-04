@@ -1,9 +1,11 @@
 # encoding:utf-8
+import sys
+sys.path.append("server")
 from datetime import datetime
 import asyncio
 import requests
 import time
-import Scop
+from src.ScopData import Scop
 ak = "obh0u6Si9EEYanw8WI8x9CNtRqe0FYG4"
 
 
@@ -19,7 +21,10 @@ async def get_routes(origin_lat: float, origin_lng: float, dest_lat: float, dest
 
   response = requests.get(url=url, params=params)
   if response:
-    data = response.json()["result"]
+    try:
+      data = response.json()["result"]
+    except Exception as e:
+      return dict()
     res = dict()
     res["distance"] = data["routes"][0]["distance"]
     res["duration"] = data["routes"][0]["duration"]
@@ -38,20 +43,25 @@ async def create_scop(data):
 
   params = {
       "query":    data['name'],
-      "region":    "北京",
+      "region":    data['city'],
       "city_limit":    "true",
       "output":    "json",
       "ak":       ak,
-
   }
-  scop = Scop.Scop(data['name'], data['location']
-                   ['lat'], data['location']['lng'])
+  scop = Scop(
+    data['name'], data['location']
+    ['lat'], data['location']['lng'],
+    data['province'], data['city']
+  )
   response = requests.get(url=url, params=params)
   if response:
-    print(response.json())
+    # print(response.json())
     for build in response.json()['result']:
-      scop.add_building(build['name'], build['location']
-                        ['lat'], build['location']['lng'])
+      try:
+        scop.add_building(build['name'], build['location']
+                          ['lat'], build['location']['lng'])
+      except Exception as e:
+        print(e)
   for fro in scop.buildings:
     for to in scop.buildings:
       if fro.lat != to.lat and fro.lng != to.lng:  # 坐标不同
@@ -83,9 +93,9 @@ async def create_city(city_code: str):
       time.sleep(0.1)
 if __name__ == "__main__":
   async def main():
-    await create_city("131")
-    # with open("./BaiduMap_cityCode_1102.txt") as file:
-    #   for city in file.readlines():
-    #     await create_city(city.split(',')[0])
+    # await create_city("131")
+    with open(r"D:\code\StudyTourSystem\server\src\ScopData\BaiduMap_cityCode_1102.txt",encoding='utf-8') as file:
+      for city in file.readlines():
+        await create_city(city.split(',')[0])
   asyncio.run(main())
   print("done")

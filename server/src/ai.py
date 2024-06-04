@@ -6,9 +6,10 @@
 @return type str
 '''
 import time
+import asyncio
 from zhipuai import ZhipuAI
 
-def get_suggestion(location:str):
+async def get_suggestion(location:str):
     client = ZhipuAI(api_key="a9bae78a296e575676bb91c8b125bcfa.Q8G7UawOhN6yF2rl")
 
     response = client.chat.asyncCompletions.create(
@@ -47,7 +48,7 @@ def get_suggestion(location:str):
 @return 回答
 @return type str
 '''
-def get_answer(question:str):
+async def get_answer(question:str):
     client = ZhipuAI(api_key="a9bae78a296e575676bb91c8b125bcfa.Q8G7UawOhN6yF2rl")
 
     response = client.chat.asyncCompletions.create(
@@ -68,3 +69,4 @@ def get_answer(question:str):
         status = result_response.task_status
         time.sleep(0.5)
     return result_response.choices[0].message.content # type:ignore
+

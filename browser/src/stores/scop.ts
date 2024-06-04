@@ -1,12 +1,12 @@
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 import { defineStore } from 'pinia'
-
-export const useCounterStore = defineStore('scop', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
-
-  return { count, doubleCount, increment }
+import { type ScopBasicInfo } from '@/types';
+export const useScopStore = defineStore('scop', () => {
+  const wannago:Ref<ScopBasicInfo> = ref({
+    name:"",
+    province:"",
+    city:""
+  });
+  const buildings:Ref<string[]> = ref([])
+  return { wannago, buildings}
 })

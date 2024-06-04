@@ -7,7 +7,6 @@ import { useApiServer } from "./apiServer";
 import { ElMessageBox } from "element-plus";
 export const useUserStore = defineStore("user",()=>{
   const api = useApiServer();
-  const token = ref("");
   const userStorage:Ref<User> = useStorage<User>("user",new User(),
     localStorage,
     {
@@ -57,10 +56,7 @@ export const useUserStore = defineStore("user",()=>{
       ElMessageBox.alert(res.data.err)
       return false
     }
-    // success login
-    token.value = res.data.token
-
-    userStorage.value = new User(user.email,user.password,new Date().getTime() + ttl);
+    userStorage.value = new User(user.email,user.password,res.data.token,new Date().getTime() + ttl);
     return true
   }
   const logout = ()=>{
@@ -69,5 +65,5 @@ export const useUserStore = defineStore("user",()=>{
   const isExpired = ():boolean=>{
     return new Date().getTime() > userStorage.value.expiration;
   }
-  return {sendCaptcha, signUp, login, logout, isExpired, userStorage, token}
+  return {sendCaptcha, signUp, login, logout, isExpired, userStorage}
 })

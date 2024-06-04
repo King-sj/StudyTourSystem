@@ -4,13 +4,8 @@ from typing import List, Dict
 import json
 from src.Route_select import *
 from src.DataType import *
-
-
-# class Coordinate:
-#   def __init__(self, lat: float, lng: float) -> None:
-#     self.lat = lat
-#     self.lng = lng
-
+from redis import asyncio as aioredis
+from datetime import datetime
 
 class Scop:
   """
@@ -77,21 +72,17 @@ class Scop_Manager:
   def __init__(self) -> None:
     pass
   # 连接到MongoDB
-
   @staticmethod
-  async def link():
+  async def link_database():
     client = motor.motor_asyncio.AsyncIOMotorClient(
-        'mongodb://localhost:27017/')
+      'mongodb://localhost:27017/')
     db = client['StudyTourSystem']
-    collection = db['scops']
-    # Ensure a unique index on the 'name' field
-    # await collection.create_index("name", unique=True)
-    return collection
-
+    return db
   @staticmethod
   async def insert_record(scop: Scop):
     """异步插入景区"""
-    collection = await Scop_Manager.link()
+    db = await Scop_Manager.link_database()
+    collection = db['scops']
     res = await collection.find_one({"name": scop.name})
     if res:
       print("already exist", res)
@@ -100,16 +91,33 @@ class Scop_Manager:
     print(f"Search record for user {scop.name} added asynchronously.")
 
   @staticmethod
+  async def get_scops(name:str, province:str, city:str):
+    db = await Scop_Manager.link_database()
+    collection = db["scops"]
+    query = {
+      "name": {"$regex": f'.*{name}.*'},
+      "province":{"$regex":f'.*{province}.*'},
+      "city":{"$regex":f'.*{city}.*'}
+    }
+    res = []
+    async for doc in collection.find(query):
+      del doc['_id']
+      res.append(doc)
+    return res
+
+  @staticmethod
   async def get_scop(name: str):
     """
     异步获取景区dict data
     """
-    collection = await Scop_Manager.link()
+    db = await Scop_Manager.link_database()
+    collection = db['scops']
     return await collection.find_one({'name': name})
 
   @staticmethod
   async def get_all() -> List[Dict]:
-    collection = await Scop_Manager.link()
+    db = await Scop_Manager.link_database()
+    collection = db['scops']
     cursor = collection.find()
     res = []
     async for record in cursor:
@@ -161,15 +169,73 @@ class Scop_Manager:
 
   @staticmethod
   async def get_hot_scop():
-    client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
-    db = client['StudyTourSystem']
+    db = await Scop_Manager.link_database()
     collection = db['score']
     cursor = collection.find({}).sort([("score", -1), ("visited_person", -1)]).limit(50)
     res = []
     async for doc in cursor:
       res.append(doc)
-    client.close()
     return res
+
+  @staticmethod
+  async def uploadJour(jour:str,name:str,score:float,province:str,city:str,token:str)->bool:
+    db = await Scop_Manager.link_database()
+    collection = db['jour']
+    await collection.create_index("user",unique=True)
+    redis_client = await aioredis.from_url('redis://localhost')
+    user = await redis_client.get(token)
+    if not user:
+      await redis_client.aclose()
+      return False
+    await collection.update_one(
+      {"user":user.decode('utf-8')},
+      {
+        "$push":{
+          "jour":{
+            "date":datetime.now().strftime(r'%Y-%m-%d  %H:%M:%S'),
+            "data":jour,
+            "score":score,
+            "scop_name":name,
+            "province":province,
+            "city":city
+          }
+        }
+      },
+      upsert=True
+    )
+    score_doc = await db['score'].find_one({"name":name})
+    if score_doc:
+      new_score = (score_doc["score"]*score_doc['visited_person'] + score)/(score_doc['visited_person']+1)
+      await db['score'].update_one({"name":name},
+        {
+          "$inc": {"visited_person": 1},
+          "$set": {"score": new_score}
+        }
+      )
+    else:
+      print("score_doc is null", name)
+      await db['score'].insert_one({
+        "name":name,
+        "score":score,
+        "visited_person":1
+      })
+    await redis_client.aclose()
+    return True
+
+  @staticmethod
+  async def get_history(token:str):
+    db = await Scop_Manager.link_database()
+    collection = db['jour']
+    redis_client = await aioredis.from_url('redis://localhost')
+    user = await redis_client.get(token)
+    if not user:
+      await redis_client.aclose()
+      return False,"redis is closed"
+    docs = await collection.find_one({"user":user.decode('utf-8')})
+    if not docs:
+      await redis_client.aclose()
+      return False,"can not find docs"
+    return True,docs["jour"]
 if __name__ == "__main__":
   import asyncio
 

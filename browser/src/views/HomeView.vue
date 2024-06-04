@@ -5,7 +5,9 @@ import { useApiStore } from '@/apis/useApiStore';
 import { type Point } from 'vue3-baidu-map-gl'
 import { useRouter } from 'vue-router';
 import ScopCard from "@/components/ScopCard.vue"
-
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { useScopStore } from '@/stores/scop';
+import { type ScopBasicInfo } from '@/types';
 const server = useApiStore()
 const router = useRouter()
 
@@ -28,9 +30,26 @@ watch(() => selectArea.value, (v) => {
     ]
   }
 })
-const handle_select_card = (name:string)=>{
-  console.log("wanna_go", name)
-  router.push({name:"touring"})
+const handle_select_card = (scop:ScopBasicInfo)=>{
+  ElMessageBox.confirm(
+    `确定去${scop.name}吗?`,
+    '',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'info',
+    }
+  )
+  .then(() => {
+    useScopStore().wannago = scop
+    router.push({name:"touring"})
+  })
+  .catch(() => {
+    ElMessage({
+      type: 'info',
+      message: '已取消',
+    })
+  })
 }
 onMounted(async ()=>{
   hot_scops.value = await server.get_hot_scop()
@@ -46,6 +65,7 @@ onMounted(async ()=>{
           <ScopCard
             v-for="scop in hot_scops?.data" :key="scop['name']"
             :name="scop['name']" :province="scop['province']" :city="scop['city']" class="city-card"
+            :visited_person="scop['visited_person']" :score="scop['score']"
             @select-card="handle_select_card"
           />
         </div>

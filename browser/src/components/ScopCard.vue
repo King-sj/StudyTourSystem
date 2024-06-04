@@ -1,15 +1,24 @@
 <script lang="ts" setup>
+import {ref} from 'vue'
+import { type ScopBasicInfo } from '@/types';
 const props = defineProps<{
   name: string
   province: string
   city:string
+  visited_person:Number
+  score:Number
 }>()
+const score = ref(props.score.valueOf()/2)
+const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
 const emit = defineEmits<{
-  selectCard: [name: string] // 具名元组语法
+  selectCard: [scop:ScopBasicInfo] // 具名元组语法
 }>()
 const handleClick = (e:any)=>{
-  console.log('hhhh');
-  emit('selectCard',props.name)
+  emit('selectCard',{
+    name:props.name,
+    province:props.province,
+    city:props.city
+  })
 }
 </script>
 <template>
@@ -20,7 +29,18 @@ const handleClick = (e:any)=>{
       </div>
     </template>
     <div class="card-main">
-      <p>main content</p>
+      <p>
+        平均评分:
+        <el-rate v-model="score" :colors="colors" size="large"
+        :texts="['oops', 'disappointed', 'normal', 'good', 'great']"
+        show-text
+        clearable
+        allow-half
+        text-color="aqua"
+        disabled
+      />
+      </p>
+      <p>总人次:{{props.visited_person}}</p>
     </div>
     <template #footer>所在地:
       {{ props.province }}

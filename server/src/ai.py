@@ -55,3 +55,5 @@ def get_response(question:str):
         temperature=0.9,
     )
     return response.choices[0].message.content # type:ignore
+
+# print(get_response("你好"))

@@ -14,7 +14,7 @@ const uploadJour = async ()=>{
   var res = await server.upLoadJour(jour.value, scop.wannago.name, 2*score.value,
     scop.wannago.province, scop.wannago.city
   )
-  console.log(res)
+  console.log("upload res",res,scop.wannago)
   if (res.data.status) {
     ElMessage("上传成功")
     router.push({name:"home"})

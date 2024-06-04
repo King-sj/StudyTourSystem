@@ -26,18 +26,6 @@ router.push({ name: "home" })
             History
           </n-button>
           <n-divider />
-
-          <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
-            @click="router.push({ name: 'about' })">
-            About
-          </n-button>
-          <n-divider />
-
-          <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
-            @click="router.push({ name: 'help' })">
-            Help
-          </n-button>
-          <n-divider />
           <n-button quaternary size="large" type="info" style="font-size: 3.5rem;margin: 2rem;"
           @click="router.push({name:'setting'})"
         >

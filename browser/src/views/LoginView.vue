@@ -21,11 +21,11 @@ const signUp = ()=>{
 
 <template>
   <main>
-    <n-space vertical>
+    <n-space style="text-align: center;margin-top: 100px" vertical>
       <n-input v-model:value="email" type="text" placeholder="please input email" :maxlength="32" />
       <n-input v-model:value="psw" type="password" show-password-on="mousedown" placeholder="please input password"
         :maxlength="16" />
-      <n-space>
+      <n-space justify="center" >
         <n-button @click="login">登录</n-button>
         <n-button @click="signUp">注册</n-button>
       </n-space>
@@ -44,7 +44,7 @@ const signUp = ()=>{
 
   .n-button {
     margin: 0;
-    // color: var(--color-text);
+    color: var(--color-text);
   }
 }
 </style>

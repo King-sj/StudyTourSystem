@@ -63,7 +63,7 @@ const emailCheck = (email:string) : boolean=>{
 </script>
 <template>
   <main>
-    <n-space vertical>
+    <n-space style="text-align: center;" vertical>
       <n-input v-model:value="email" type="text"  :maxlength="32">
         <template #prefix>邮箱</template>
       </n-input>
@@ -79,7 +79,7 @@ const emailCheck = (email:string) : boolean=>{
           </n-button>
         </template>
       </n-input>
-      <n-space>
+      <n-space justify="center">
         <n-button @click="signUp">注册</n-button>
       </n-space>
     </n-space>

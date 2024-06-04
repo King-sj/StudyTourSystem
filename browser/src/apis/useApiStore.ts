@@ -20,7 +20,7 @@ export const useApiStore = defineStore('apiStore', () => {
     return res
   }
   async function get_routes(area:string,origin:string,dest:string) {
-    const token = useUserStore().token
+    const token = useUserStore().userStorage.token
     const res = await server.post("get_routes", {
       area:area,
       origin:origin,
@@ -41,6 +41,9 @@ export const useApiStore = defineStore('apiStore', () => {
    * @returns
    */
   async function get_scops_info(name:string, province:string="", city:string="") {
+    if(city.includes("市辖区")) {
+      city = ""
+    }
     const res = await server.post("get_scops_info",{
       name:name,
       province:province,
@@ -67,8 +70,34 @@ export const useApiStore = defineStore('apiStore', () => {
     })
     return res
   }
+  async function get_routes_by_baidu(
+    origin_lat:Number,origin_lng:Number,
+    dest_lat:Number,dest_lng:Number
+  ) {
+    const res = await server.post("get_routes_by_baidu",{
+      origin_lat:origin_lat,
+      origin_lng:origin_lng,
+      dest_lat:dest_lat,
+      dest_lng:dest_lng
+    })
+    return res
+  }
+  async function get_ai_suggestion(name:string) {
+    const res =await server.post("get_ai_suggestion",{
+      name:name
+    })
+    return res
+  }
+  async function get_ai_response(question:string) {
+    const res = await server.post("get_ai_response",{
+      question:question
+    })
+    return res
+  }
   return {
     get_all_scop, get_routes, get_hot_scop,
-    get_scops_info, upLoadJour, get_history
+    get_scops_info, upLoadJour, get_history,
+    get_routes_by_baidu, get_ai_suggestion,
+    get_ai_response
   }
 })

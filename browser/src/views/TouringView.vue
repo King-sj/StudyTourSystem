@@ -5,7 +5,7 @@ import { ref, watch, type Ref, computed, onMounted, onUnmounted, onBeforeMount, 
 import { useApiStore } from '@/apis/useApiStore';
 import { type Point } from 'vue3-baidu-map-gl'
 import { useScopStore } from '@/stores/scop';
-import { ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import router from '@/router';
 import { onBeforeRouteLeave } from 'vue-router';
 const server = useApiStore()
@@ -13,6 +13,7 @@ const server = useApiStore()
 const dest = ref({ lng: 116.364594, lat: 39.96725 } as Point);
 const center = ref({ lng: 116.364594, lat: 39.96725 } as Point);
 const polygonPath = ref([dest.value])
+const keyNode:Ref<Point[]> = ref([])
 const buildingOptions:Ref<{label:string,value:string}[]> = ref([])
 const fromBuilding = ref("")
 const toBuilding = ref("")
@@ -30,7 +31,7 @@ const planPath = async ()=>{
   console.log("routes", res)
 
   polygonPath.value = []
-  var locs = res.data.split(";")
+  var locs = res.data[0].split(";")
   locs.forEach((loc:string)=>{
     var location = loc.split(',')
     console.log(location)
@@ -40,7 +41,20 @@ const planPath = async ()=>{
       lat: Number(location[1])
     })
   })
-  console.log(polygonPath.value)
+  keyNode.value = []
+  var key_nodes = res.data[1].split(";")
+  key_nodes.forEach((loc:string)=>{
+    var location = loc.split(',')
+    console.log(location)
+    if(location.length == 2)
+    keyNode.value.push({
+      lng: Number(location[0]),
+      lat: Number(location[1])
+    })
+  })
+  dest.value.lat = keyNode.value[0].lat
+  dest.value.lng = keyNode.value[0].lng
+  console.log("key node", keyNode.value)
 }
 watch(()=>fromBuilding.value,async ()=>{
   await planPath()
@@ -48,7 +62,7 @@ watch(()=>fromBuilding.value,async ()=>{
 watch(()=>toBuilding.value,async ()=>{
   await planPath()
 })
-
+const scop_ai_info = ref("")
 onMounted(async ()=>{
   var scop = useScopStore().wannago
   var infos = await server.get_scops_info(
@@ -81,6 +95,12 @@ onMounted(async ()=>{
   polygonPath.value = [
     dest.value
   ]
+  var scop_ai_info_res = await server.get_ai_suggestion(scop.name)
+  if (scop_ai_info_res.data.status) {
+    scop_ai_info.value = scop_ai_info_res.data.msg
+  } else {
+    ElMessage("获取ai回答失败:\n"+scop_ai_info_res.data.msg)
+  }
 })
 
 
@@ -91,6 +111,14 @@ onMounted(async ()=>{
 //     router.push({name:"grade"})
 //   else next()
 // })
+const endTour = ()=>{
+  console.log("end tour")
+  var res = router.push({name:'grade'})
+  router.onError((res)=>{
+    console.log("router ocurr ",res)
+  })
+  console.log("end jump",res)
+}
 </script>
 <template>
   <main style="width: 100%;height: 100%;">
@@ -123,16 +151,20 @@ onMounted(async ()=>{
         />
       </el-select>
     </div>
+    <n-ellipsis :line-clamp="2" style="width: 100%;text-indent: 2rem;color: aquamarine">
+      {{scop_ai_info}}
+    </n-ellipsis>
     <MapChart
       :key="useScopStore().wannago.name"
       v-model:dest="dest"
       v-model:center="center"
       v-model:polygon-path="polygonPath"
+      :key_nodes="keyNode"
       class="map">
     </MapChart>
   </main>
   <footer>
-    <el-button type="primary" @click="router.push({name:'grade'})">
+    <el-button type="primary" @click="endTour">
       结束游学
     </el-button>
   </footer>

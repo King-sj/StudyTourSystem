@@ -7,8 +7,12 @@ const props = defineProps<{
   city:string
   visited_person:Number
   score:Number
+  scop:any
 }>()
-const score = ref(props.score.valueOf()/2)
+const score = ref(0)
+if (props.score) {
+  score.value = props.score.valueOf()/2
+}
 const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
 const emit = defineEmits<{
   selectCard: [scop:ScopBasicInfo] // 具名元组语法
@@ -40,7 +44,8 @@ const handleClick = (e:any)=>{
         disabled
       />
       </p>
-      <p>总人次:{{props.visited_person}}</p>
+      <p>总人次:{{props.visited_person == undefined ? 0 : props.visited_person}}</p>
+
     </div>
     <template #footer>所在地:
       {{ props.province }}

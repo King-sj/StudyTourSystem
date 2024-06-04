@@ -108,7 +108,7 @@ async def road_plan():
   origin_lng = data["origin_lng"]
   dest_lat = data["dest_lat"]
   dest_lng = data["dest_lng"]
-  res = await get_routes_by_baidu(origin_lat,origin_lng,dest_lat,dest_lng)
+  res = await get_routes_by_baidu(origin_lat,origin_lng,dest_lat,dest_lng,"driving")
   return jsonify({
     "status":True,
     "msg": "success",
@@ -124,8 +124,8 @@ async def get_ai_suggestion():
       "msg": "req is null"
     })
   loc = data['name']
-  # res = await get_suggestion(loc)
-  res = "fahsdfkasdsdfasdfhkasdfjkasfkdsfks"
+  res = await get_suggestion(loc)
+  print("ai suggest ", res)
   if(res):
     return jsonify({
       "status":True,
@@ -146,8 +146,7 @@ async def get_ai_response():
       "msg": "req is null"
     })
   question = data['question']
-  # res = await get_response(question)
-  res = "fahsdfkasdsdfasdfhkasdfjkasfkdsfks"
+  res = await get_answer(question)
 
   if(res):
     return jsonify({

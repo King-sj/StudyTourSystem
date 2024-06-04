@@ -8,6 +8,7 @@ import {
 import { type MapType, type MapProps, type Point,
 } from 'vue3-baidu-map-gl'
 import { useApiStore } from "@/apis/useApiStore";
+import { ElMessage } from "element-plus";
 const props = defineProps<{
   key_nodes: Point[]
 }>()
@@ -46,11 +47,14 @@ watch(()=>location.value,async()=>{
       location.value.point.lat,location.value.point.lng,
       dest.value.lat,dest.value.lng
     )
-    const paths = res.data.step
+    if(!res.data.status) {
+      ElMessage("获取驾车路线失败")
+    }
+    const paths = res.data.res.step
     console.log("baidu plan",res)
     baiduPlanPath.value = []
-    paths.forEach((path:string)=>{
-      var locations = path.split(';')
+    paths.forEach((path:any)=>{
+      var locations = path['path'].split(';')
       locations.forEach((loc:string)=>{
         var location = loc.split(',')
         baiduPlanPath.value.push({
@@ -59,6 +63,7 @@ watch(()=>location.value,async()=>{
         })
       })
     })
+    console.log("baidu plan res",baiduPlanPath.value)
   }
 
 })
@@ -103,7 +108,7 @@ const syncCenterAndZoom = (e: any) => {
       :mapStyleId="mapStyle"
     >
     <BPolyline
-      :path="[...baiduPlanPath,location.point || {},...polygonPath]"
+      :path="baiduPlanPath.length == 0 ? [location.point || {},...polygonPath]: [...baiduPlanPath,...polygonPath]"
       stroke-color="#0ff"
       :stroke-opacity="1"
       :stroke-weight="8"

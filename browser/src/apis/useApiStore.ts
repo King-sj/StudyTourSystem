@@ -82,22 +82,10 @@ export const useApiStore = defineStore('apiStore', () => {
     })
     return res
   }
-  async function get_ai_suggestion(name:string) {
-    const res =await server.post("get_ai_suggestion",{
-      name:name
-    })
-    return res
-  }
-  async function get_ai_response(question:string) {
-    const res = await server.post("get_ai_response",{
-      question:question
-    })
-    return res
-  }
+
   return {
     get_all_scop, get_routes, get_hot_scop,
     get_scops_info, upLoadJour, get_history,
-    get_routes_by_baidu, get_ai_suggestion,
-    get_ai_response
+    get_routes_by_baidu
   }
 })

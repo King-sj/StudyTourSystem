@@ -9,9 +9,10 @@ from src.ScopData import Scop
 ak = "obh0u6Si9EEYanw8WI8x9CNtRqe0FYG4"
 
 
-async def get_routes(origin_lat: float, origin_lng: float, dest_lat: float, dest_lng: float):
+async def get_routes(origin_lat: float, origin_lng: float, dest_lat: float, dest_lng: float,
+    method:str="walking"):
   # 接口地址
-  url = "https://api.map.baidu.com/directionlite/v1/walking"
+  url = f"https://api.map.baidu.com/directionlite/v1/{method}"
 
   params = {
       "origin":    f"{origin_lat},{origin_lng}",

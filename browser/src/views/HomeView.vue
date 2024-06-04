@@ -161,6 +161,7 @@ onMounted(async () => {
   margin: 0;
   padding: 0.1rem;
   height: 50%;
+  max-height: 50vh;
 
   // background-color: red;
   .card-container {

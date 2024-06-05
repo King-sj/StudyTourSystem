@@ -160,3 +160,14 @@ async def get_ai_response():
       "msg": "can not answer"
     })
 
+@main_blueprint.route("/get_jour_by_scop_name", methods=['POST','GET'])
+async def get_jour_by_scop_name():
+  data = request.json
+  if not data:
+    return jsonify({
+      "status":False,
+      "msg": "req is null"
+    })
+  res = await Scop_Manager.get_jours(data['name'])
+  return res
+

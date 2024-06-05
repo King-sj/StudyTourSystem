@@ -8,6 +8,7 @@ const props = defineProps<{
   jour: string
   score: Number
   date: string
+  user?:string
 }>()
 const score = ref(props.score.valueOf() / 2)
 const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
@@ -22,6 +23,7 @@ const line_cnt = ref("2")
   >
     <template #header>
       <div class="card-header">
+        <p>{{ props.user }}</p>
         <p>
           <el-rate v-model="score" :colors="colors" size="large"
             clearable allow-half

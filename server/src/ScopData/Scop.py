@@ -250,6 +250,29 @@ class Scop_Manager:
       await redis_client.aclose()
       return False,"can not find docs"
     return True,docs["jour"]
+
+  @staticmethod
+  async def get_jours(name:str):
+    db = await Scop_Manager.link_database()
+    collection = db['jour']
+    pipeline = [
+        {"$match": {"jour.scop_name": {"$regex": f".*{name}.*", "$options": "i"}}},
+        {"$project": {  # Project required fields
+            "user": 1,
+            "jour": {
+                "$filter": {
+                    "input": "$jour",
+                    "as": "item",
+                    "cond": {"$eq": ["$$item.scop_name", name]}
+                }
+            }
+        }}
+    ]
+    res = []
+    async for doc in collection.aggregate(pipeline) :
+      del doc['_id']
+      res.append(doc)
+    return res
 if __name__ == "__main__":
   import asyncio
 

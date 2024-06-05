@@ -82,10 +82,16 @@ export const useApiStore = defineStore('apiStore', () => {
     })
     return res
   }
+  async function get_jour_by_scop_name(name:string) {
+    const res = await server.post("get_jour_by_scop_name",{
+      name:name
+    })
+    return res
+  }
 
   return {
     get_all_scop, get_routes, get_hot_scop,
     get_scops_info, upLoadJour, get_history,
-    get_routes_by_baidu
+    get_routes_by_baidu,get_jour_by_scop_name
   }
 })

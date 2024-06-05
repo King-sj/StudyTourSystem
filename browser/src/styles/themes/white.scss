@@ -1,0 +1,7 @@
+@import 'basic/variable.scss';
+:root[data-theme='white'] {
+  @include basic-variable();
+  --color-background: white;
+  --color-text: #000000;
+  // 其他暗主题样式变量
+}

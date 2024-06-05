@@ -2,6 +2,7 @@
 :root[data-theme='light'] {
   @include basic-variable();
   --color-background: linear-gradient(135deg, #001f3f, #0088a9, #00c9a7, #92d5c6, #ebf5ee);
+
   --color-text: #000000;
   // 其他暗主题样式变量
 }

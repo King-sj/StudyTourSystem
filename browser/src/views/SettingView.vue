@@ -8,8 +8,8 @@ const logout = ()=>{
   useUserStore().logout()
   router.push({name:"login"})
 }
-const themes = ['dark','light']
-const theme = ref(themes[0])
+const themes = ['dark','light','white']
+const theme = ref(themes[2])
 
 watch(theme,
 ()=>{

@@ -160,8 +160,8 @@ onMounted(async () => {
 .cities-view {
   margin: 0;
   padding: 0.1rem;
-  height: 50%;
-  max-height: 50vh;
+  height: 80%;
+  max-height: 80vh;
 
   // background-color: red;
   .card-container {

@@ -147,6 +147,7 @@ async def get_ai_response():
     })
   question = data['question']
   res = await get_answer(question)
+  print("ai response ", res)
 
   if(res):
     return jsonify({

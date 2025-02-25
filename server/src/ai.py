@@ -10,7 +10,7 @@ import asyncio
 from zhipuai import ZhipuAI
 
 async def get_suggestion(location:str):
-    client = ZhipuAI(api_key="a9bae78a296e575676bb91c8b125bcfa.Q8G7UawOhN6yF2rl")
+    client = ZhipuAI(api_key="YOUR_API_TOKEN")
 
     response = client.chat.asyncCompletions.create(
         model="glm-4",
